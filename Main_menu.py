@@ -11,6 +11,7 @@
 
 import assets.libs.scann as scan
 from setting import bukaSetting
+import pages.signIn as signIn
 from tkinter import messagebox, font, ttk
 from tkinter import *
 import customtkinter as ctk
@@ -61,168 +62,168 @@ def on_closing():
         mainMenu.destroy()
 
 # toplevel
-def showSignUp():
-    signUpWd = ctk.CTkToplevel(mainMenu)
-    signUpWd.title("OMRay | Sign Up")
-    signUpWd.geometry('925x500+400+200')
-    signUpWd.resizable(False, False)
-    signUpWd.iconbitmap('assets/images/OMRay.ico')
+# def showSignUp():
+#     signUpWd = ctk.CTkToplevel(mainMenu)
+#     signUpWd.title("OMRay | Sign Up")
+#     signUpWd.geometry('925x500+400+200')
+#     signUpWd.resizable(False, False)
+#     signUpWd.iconbitmap('assets/images/OMRay.ico')
 
-    imgbg = ctk.CTkImage(light_image=Image.open("assets/images/bg_wall.png"), size=(1000, 650))
-    l1=ctk.CTkLabel(master=signUpWd, image=imgbg, text=None)
-    l1.place(x=0, y=0)
+#     imgbg = ctk.CTkImage(light_image=Image.open("assets/images/bg_wall.png"), size=(1000, 650))
+#     l1=ctk.CTkLabel(master=signUpWd, image=imgbg, text=None)
+#     l1.place(x=0, y=0)
 
-    # function ====================================================
+#     # function ====================================================
 
-    def signup():
-        username = user.get()
-        password = code.get()
-        confirm_password = confirm_code.get()
+#     def signup():
+#         username = user.get()
+#         password = code.get()
+#         confirm_password = confirm_code.get()
 
-        if len(username) == 0 or len(password) == 0:
-            messagebox.showerror('Invalid', "All fields required!")
-        elif password == confirm_password:
-            conn.execute("INSERT INTO logins(username, password, status) VALUES (?,?, 'off')",
-                         (username, password))
-            cursor = conn.execute("SELECT login_id FROM logins WHERE username=? and password=?",(username, password))
-            id_long = cursor.fetchone()
-            conn.execute("INSERT INTO settings(id_login, cameraNo, showAnswer, autoSave) VALUES (?,0,1,1)",(id_long[0],))
-            conn.commit()
-            messagebox.showinfo('Sign Up', 'Account created successfully')
-            signUpWd.destroy()
-            showSignIn()
-        else:
-            messagebox.showerror('Invalid', "Password doesn't match")
+#         if len(username) == 0 or len(password) == 0:
+#             messagebox.showerror('Invalid', "All fields required!")
+#         elif password == confirm_password:
+#             conn.execute("INSERT INTO logins(username, password, status) VALUES (?,?, 'off')",
+#                          (username, password))
+#             cursor = conn.execute("SELECT login_id FROM logins WHERE username=? and password=?",(username, password))
+#             id_long = cursor.fetchone()
+#             conn.execute("INSERT INTO settings(id_login, cameraNo, showAnswer, autoSave) VALUES (?,0,1,1)",(id_long[0],))
+#             conn.commit()
+#             messagebox.showinfo('Sign Up', 'Account created successfully')
+#             signUpWd.destroy()
+#             showSignIn()
+#         else:
+#             messagebox.showerror('Invalid', "Password doesn't match")
 
-    def signIn_cmd():
-        signUpWd.destroy()
-        showSignIn()
+#     def signIn_cmd():
+#         signUpWd.destroy()
+#         showSignIn()
 
-    # set tampilan ================================================
+#     # set tampilan ================================================
 
-    frame = ctk.CTkFrame(signUpWd, corner_radius=25, width=350, height=390, bg_color='transparent')
-    frame.place(relx=0.5, rely=0.5, anchor=CENTER)
+#     frame = ctk.CTkFrame(signUpWd, corner_radius=25, width=350, height=390, bg_color='transparent')
+#     frame.place(relx=0.5, rely=0.5, anchor=CENTER)
 
-    heading = ctk.CTkLabel(frame, text='SIGN UP', text_color='#FFF', bg_color='transparent',
-                    font=('Fugaz One', 28, 'bold'))
-    heading.place(relx=0.5, y=40, anchor=CENTER)
+#     heading = ctk.CTkLabel(frame, text='SIGN UP', text_color='#FFF', bg_color='transparent',
+#                     font=('Fugaz One', 28, 'bold'))
+#     heading.place(relx=0.5, y=40, anchor=CENTER)
 
-    # entry ========================================================
+#     # entry ========================================================
 
-    # username --------------------------------------
+#     # username --------------------------------------
 
-    user = ctk.CTkEntry(frame, width=260, height=40, text_color='white', 
-                        placeholder_text='Username', bg_color='transparent', font=('Fresca', 18))
-    user.place(relx=0.5, y=100, anchor=CENTER)
+#     user = ctk.CTkEntry(frame, width=260, height=40, text_color='white', 
+#                         placeholder_text='Username', bg_color='transparent', font=('Fresca', 18))
+#     user.place(relx=0.5, y=100, anchor=CENTER)
 
-    # password --------------------------------------
+#     # password --------------------------------------
 
-    code = ctk.CTkEntry(frame, width=260, height=40, text_color='white', 
-                        placeholder_text='Password', bg_color='transparent', font=('Fresca', 18))
-    code.place(relx=0.5, y=160, anchor=CENTER)
+#     code = ctk.CTkEntry(frame, width=260, height=40, text_color='white', 
+#                         placeholder_text='Password', bg_color='transparent', font=('Fresca', 18))
+#     code.place(relx=0.5, y=160, anchor=CENTER)
 
-    # confirm password -------------------------------
+#     # confirm password -------------------------------
 
-    confirm_code = ctk.CTkEntry(frame, height=40, width=260, text_color='white', 
-                                placeholder_text='Confirm Password', bg_color='transparent', 
-                                font=('Fresca', 18))
-    confirm_code.place(relx=0.5, y=220, anchor=CENTER)
+#     confirm_code = ctk.CTkEntry(frame, height=40, width=260, text_color='white', 
+#                                 placeholder_text='Confirm Password', bg_color='transparent', 
+#                                 font=('Fresca', 18))
+#     confirm_code.place(relx=0.5, y=220, anchor=CENTER)
 
-    # button ------------------------------------------
+#     # button ------------------------------------------
 
-    sign_up = ctk.CTkButton(frame, width=260, height=40, text='Sign Up',
-                     bg_color='transparent', corner_radius=6, text_color='white', 
-                     cursor='hand2', font=('Fugaz One', 24), command=signup)
-    sign_up.pack()
-    sign_up.place(relx=0.5, y=290, anchor=CENTER)
+#     sign_up = ctk.CTkButton(frame, width=260, height=40, text='Sign Up',
+#                      bg_color='transparent', corner_radius=6, text_color='white', 
+#                      cursor='hand2', font=('Fugaz One', 24), command=signup)
+#     sign_up.pack()
+#     sign_up.place(relx=0.5, y=290, anchor=CENTER)
 
-    label = ctk.CTkLabel(frame, text="Already have account?", text_color='#fff',
-                  bg_color='transparent', font=('Fresca', 16))
-    label.place(x=74, y=320)
+#     label = ctk.CTkLabel(frame, text="Already have account?", text_color='#fff',
+#                   bg_color='transparent', font=('Fresca', 16))
+#     label.place(x=74, y=320)
 
-    sign_in = ctk.CTkButton(frame, width=6, text='Sign In', border_width=0,
-                     bg_color='transparent', fg_color="transparent", cursor='hand2', 
-                     text_color='#3B92EA', font=('Fresca', 16, 'bold'), command=signIn_cmd)
-    sign_in.place(x=220, y=320)
+#     sign_in = ctk.CTkButton(frame, width=6, text='Sign In', border_width=0,
+#                      bg_color='transparent', fg_color="transparent", cursor='hand2', 
+#                      text_color='#3B92EA', font=('Fresca', 16, 'bold'), command=signIn_cmd)
+#     sign_in.place(x=220, y=320)
 
-    # Main app---------------------
+#     # Main app---------------------
 
-    signUpWd.mainloop()
+#     signUpWd.mainloop()
 
 # toplevel
-def showSignIn():
-    signInWd = ctk.CTkToplevel(mainMenu)
-    signInWd.title('OMRay | Sign In')
-    signInWd.geometry('925x500+400+200')
-    signInWd.resizable(False, False)
-    signInWd.iconbitmap('assets/images/OMRay.ico')
+# def showSignIn():
+#     signInWd = ctk.CTkToplevel(mainMenu)
+#     signInWd.title('OMRay | Sign In')
+#     signInWd.geometry('925x500+400+200')
+#     signInWd.resizable(False, False)
+#     signInWd.iconbitmap('assets/images/OMRay.ico')
 
-    # set tampilan ================================================
+#     # set tampilan ================================================
 
-    imgSi = ctk.CTkImage(light_image=Image.open("assets/images/wp.png"), size=(298, 298))
-    ctk.CTkLabel(signInWd, image=imgSi, bg_color='transparent', text=None).place(x=60, rely=0.2)
+#     imgSi = ctk.CTkImage(light_image=Image.open("assets/images/wp.png"), size=(298, 298))
+#     ctk.CTkLabel(signInWd, image=imgSi, bg_color='transparent', text=None).place(x=60, rely=0.2)
 
-    frameSignIn = ctk.CTkFrame(signInWd, corner_radius=25, width=350, height=350, bg_color="transparent")
-    frameSignIn.place(relx=0.5, y=70)
+#     frameSignIn = ctk.CTkFrame(signInWd, corner_radius=25, width=350, height=350, bg_color="transparent")
+#     frameSignIn.place(relx=0.5, y=70)
 
-    heading = ctk.CTkLabel(frameSignIn, text='SIGN IN', text_color='#FFF', bg_color='transparent',
-                    font=('Fugaz One', 28, 'bold'))
-    heading.place(relx=0.5, y=40, anchor=CENTER)
+#     heading = ctk.CTkLabel(frameSignIn, text='SIGN IN', text_color='#FFF', bg_color='transparent',
+#                     font=('Fugaz One', 28, 'bold'))
+#     heading.place(relx=0.5, y=40, anchor=CENTER)
 
-    # function ====================================================
+#     # function ====================================================
 
-    def signInCmd():
-        username = user.get()
-        password = code.get()
+#     def signInCmd():
+#         username = user.get()
+#         password = code.get()
 
-        cursor = conn.execute(
-            'SELECT * FROM logins WHERE username="%s" and password="%s"' % (username, password))
-        if cursor.fetchone():
-            conn.execute(
-                "UPDATE logins SET status = 'on' WHERE username=? and password=?", (username, password))
-            conn.commit()
-            mainMenu.deiconify()
-            signInWd.destroy()
-        else:
-            messagebox.showerror("Invalid", "invalid username or password")
+#         cursor = conn.execute(
+#             'SELECT * FROM logins WHERE username="%s" and password="%s"' % (username, password))
+#         if cursor.fetchone():
+#             conn.execute(
+#                 "UPDATE logins SET status = 'on' WHERE username=? and password=?", (username, password))
+#             conn.commit()
+#             mainMenu.deiconify()
+#             signInWd.destroy()
+#         else:
+#             messagebox.showerror("Invalid", "invalid username or password")
 
-    def signUp_cmd():
-        signInWd.destroy()
-        showSignUp()
+#     def signUp_cmd():
+#         signInWd.destroy()
+#         showSignUp()
 
-    # entry ========================================================
+#     # entry ========================================================
 
-    # username --------------------------------------
+#     # username --------------------------------------
 
-    user = ctk.CTkEntry(frameSignIn, height=40, width=260, text_color='white', placeholder_text='Username',
-                 bg_color='transparent', font=('Fresca', 18))
-    user.place(relx=0.5, y=100, anchor=CENTER)
+#     user = ctk.CTkEntry(frameSignIn, height=40, width=260, text_color='white', placeholder_text='Username',
+#                  bg_color='transparent', font=('Fresca', 18))
+#     user.place(relx=0.5, y=100, anchor=CENTER)
 
-    # password --------------------------------------
+#     # password --------------------------------------
 
-    code = ctk.CTkEntry(frameSignIn, height=40, width=260, text_color='white', placeholder_text='Password',
-                        bg_color='transparent', font=('Fresca', 18))
-    code.place(relx=0.5, y=160, anchor=CENTER)
+#     code = ctk.CTkEntry(frameSignIn, height=40, width=260, text_color='white', placeholder_text='Password',
+#                         bg_color='transparent', font=('Fresca', 18))
+#     code.place(relx=0.5, y=160, anchor=CENTER)
 
-    # button ------------------------------------------
+#     # button ------------------------------------------
 
-    sign_in = ctk.CTkButton(frameSignIn, width=260, height=40, text='Sign In',
-                            bg_color='transparent', corner_radius=6, text_color='white', 
-                            cursor='hand2',font=('Fugaz One', 24), command=signInCmd)
-    sign_in.pack()
-    sign_in.place(relx=0.5, y=230, anchor=CENTER)
+#     sign_in = ctk.CTkButton(frameSignIn, width=260, height=40, text='Sign In',
+#                             bg_color='transparent', corner_radius=6, text_color='white', 
+#                             cursor='hand2',font=('Fugaz One', 24), command=signInCmd)
+#     sign_in.pack()
+#     sign_in.place(relx=0.5, y=230, anchor=CENTER)
 
-    label = ctk.CTkLabel(frameSignIn, text="Don't have an account?", text_color='#fff',
-                  bg_color='transparent', font=('Fresca', 16))
-    label.place(x=72, y=260)
+#     label = ctk.CTkLabel(frameSignIn, text="Don't have an account?", text_color='#fff',
+#                   bg_color='transparent', font=('Fresca', 16))
+#     label.place(x=72, y=260)
 
-    sign_up = ctk.CTkButton(frameSignIn, width=6, text='Sign Up', border_width=0, 
-                            bg_color='transparent', fg_color="transparent", cursor='hand2', 
-                            text_color='#3B92EA', font=('Fresca', 16, 'bold'), command=signUp_cmd)
-    sign_up.place(x=221, y=260)
+#     sign_up = ctk.CTkButton(frameSignIn, width=6, text='Sign Up', border_width=0, 
+#                             bg_color='transparent', fg_color="transparent", cursor='hand2', 
+#                             text_color='#3B92EA', font=('Fresca', 16, 'bold'), command=signUp_cmd)
+#     sign_up.place(x=221, y=260)
 
-    signInWd.protocol("WM_DELETE_WINDOW", on_closing)
-    signInWd.mainloop()
+#     signInWd.protocol("WM_DELETE_WINDOW", on_closing)
+#     signInWd.mainloop()
 
 def autoRun():
     # creating database
@@ -268,13 +269,13 @@ def autoRun():
     else:
         # hide dashboard ---------
         mainMenu.withdraw()
-        showSignIn()
+        signIn.showSignIn()
 
 def logout():
     mainMenu.withdraw()
     conn.execute("UPDATE logins SET status = 'off' WHERE status = 'on'")
     conn.commit()
-    showSignIn()
+    signIn.showSignIn()
 
 # toplevel
 def setting():

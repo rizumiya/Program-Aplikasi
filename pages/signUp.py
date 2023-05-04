@@ -1,32 +1,26 @@
-import assets.libs.scann as scan
-from setting import bukaSetting
-from tkinter import messagebox, font, ttk
+from tkinter import messagebox
 from tkinter import *
 import customtkinter as ctk
+from pages.signIn import showSignIn
 from PIL import Image
 import sqlite3
 import os
 import sys
 
-# Mendapatkan direktori dari file main.py
-current_dir = os.path.dirname(os.path.abspath(__file__))
-
-# Mendapatkan direktori dari file my_module.py
-module_dir = os.path.abspath(os.path.join(current_dir, '..'))
-
-# Menambahkan direktori tersebut ke dalam sys.path
+MYDIR = os.path.dirname(__file__)
+module_dir = os.path.abspath(os.path.join(MYDIR, '..'))
 sys.path.append(module_dir)
 
 # Mengimpor file my_module.py
 from Main_menu import mainMenu
 
-
-
-
+SQLPATH = os.path.join(MYDIR, "assets", "temps", "omr.db")
+global conn
+conn = sqlite3.connect(SQLPATH)
 
 # toplevel
 def showSignUp():
-    signUpWd = ctk.CTkToplevel(mainMenu)
+    signUpWd = ctk.CTk()
     signUpWd.title("OMRay | Sign Up")
     signUpWd.geometry('925x500+400+200')
     signUpWd.resizable(False, False)
