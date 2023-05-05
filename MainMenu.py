@@ -130,7 +130,7 @@ class MainMenu(ctk.CTk):
                     fg_color='#fff').pack(padx=5, pady=10)
 
         self.tree = self.loadExcel()
-
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     # function load data excel
 
