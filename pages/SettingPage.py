@@ -174,6 +174,7 @@ class SettingPage(ctk.CTkToplevel):
         self.mesg = self.updatePass()
 
         messagebox.showinfo('Setting', self.mesg)
+        self.destroy()
 
 
     def dumpSQL(self):

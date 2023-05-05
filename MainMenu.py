@@ -8,7 +8,6 @@
 # =======================================================
 
 
-# import assets.libs.scann as scan
 from tkinter import messagebox, font, ttk
 from tkinter import *
 import customtkinter as ctk
@@ -16,6 +15,9 @@ import openpyxl as xl
 from PIL import Image
 import sqlite3
 import os
+
+from assets.libs.Database import Database
+from assets.libs.Module import Module
 
 class MainMenu(ctk.CTk):
     def __init__(self):
@@ -29,10 +31,19 @@ class MainMenu(ctk.CTk):
 
         # creating database
         
-        self.MYDIR = os.path.dirname(__file__)
-        self.SQLPATH = os.path.join(self.MYDIR, "assets", "temps", "omr.db")
+        self.SQLPATH = os.path.join(os.path.dirname(__file__), 'assets', 'temps', 'omr.db')
         global conn
         self.conn = sqlite3.connect(self.SQLPATH)
+        self.cur = self.conn.cursor()
+
+        #variable
+
+        self.database = Database()
+        self.my_module = Module()
+        self.camNo = int
+        self.subj = str
+        self.shwAns = int
+        self.autoSv = int
 
         # header ===============================================
 
@@ -111,7 +122,7 @@ class MainMenu(ctk.CTk):
         self.scan_button = ctk.CTkButton(self, text="Create a New Scan", image=self.img_scan, compound=LEFT, 
                                     fg_color="#1798F8", hover_color="#085288", text_color="#fff", 
                                     corner_radius=25, width=400, height=100, cursor='hand2', 
-                                    font=('Fredoka One', 32, 'bold'))
+                                    font=('Fredoka One', 32, 'bold'), command=self.quickScan)
         self.scan_button.place(x=30, y=610)
 
         # end of button ===========================================
@@ -130,6 +141,7 @@ class MainMenu(ctk.CTk):
                     fg_color='#fff').pack(padx=5, pady=10)
 
         self.tree = self.loadExcel()
+        # self.ambilSetting()
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     # function load data excel
@@ -194,43 +206,12 @@ class MainMenu(ctk.CTk):
 
 
     def autoRun(self):
-        self.conn.execute("""
-        CREATE TABLE IF NOT EXISTS logins (
-            login_id integer primary key autoincrement,
-            username text,
-            password text,
-            status text
-        )""")
+        self.database.createTables()
 
-        self.conn.execute("""
-        CREATE TABLE IF NOT EXISTS subjects (
-            sub_id integer primary key autoincrement,
-            sub_name text,
-            sub_totalQuestion integer,
-            sub_choices integer,
-            sub_answer text
-        )""")
-        
-        self.conn.execute("""
-        CREATE TABLE IF NOT EXISTS settings (
-            set_id integer primary key autoincrement,
-            id_login integer, 
-            cameraNo integer, 
-            def_subject text, 
-            showAnswer integer, 
-            autoSave integer
-        )""")
-
-        # conn.execute("INSERT INTO subjects(sub_name, sub_totalQuestion, sub_choices, sub_answer) VALUES ('Matematika', 20, 5, '2, 3, 1, 2, 3, 2, 2, 3, 1, 3, 1, 2, 2, 2, 3, 2, 1, 1, 1, 4')")
-
-        self.conn.commit()
-
-        self.cursor = self.conn.execute(
-            'SELECT * FROM logins WHERE status= "on"')
+        self.cursor = self.conn.execute('SELECT * FROM logins WHERE status= "on"')
         if self.cursor.fetchone():
             self.deiconify()
         else:
-            # hide dashboard ---------
             self.destroy()
             from pages.LoginForm import LoginForm
             login_form = LoginForm()
@@ -255,6 +236,25 @@ class MainMenu(ctk.CTk):
     def on_closing(self):
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
             self.destroy()
+
+
+    def ambilSetting(self):
+        from pages.SettingPage import SettingPage
+        setting_page = SettingPage(self, "test")
+        self.cur.execute("SELECT cameraNo, def_subject, showAnswer, autoSave FROM settings WHERE id_login=?",(setting_page.ambil_login(),))
+        self.rows = self.cur.fetchall()
+        if self.rows:
+            self.camNo , self.subj, self.shwAns, self.autoSv = self.rows[0]
+
+
+    def quickScan(self):
+        ansid = 0
+        ans = [[2, 3, 1, 2, 3, 2, 2, 3, 1, 3],
+            [1, 2, 2, 2, 3, 2, 1, 1, 1, 4]]
+        
+        from assets.libs.scann import newScanning
+        newScanning(True, int(self.camNo), 10, 5, ans, ansid)
+
 
 
 if __name__ == '__main__':
