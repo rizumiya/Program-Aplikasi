@@ -22,10 +22,11 @@ class checkboxWindow(ctk.CTkToplevel):
         
         self.checkbox_values = []
         self.jawaban = str
+        global banyakPilihan
 
         # perulangan untuk membuat widget checkbox
 
-        self.checkbox_vars = [ctk.IntVar() for i in range(4)]
+        self.checkbox_vars = [ctk.IntVar() for i in range(banyakPilihan)]
         for i, var in enumerate(self.checkbox_vars):
             checkbox = ctk.CTkCheckBox(self, text=chr(i+97), variable=var)
             checkbox.grid(row=0, column=i)
@@ -48,6 +49,7 @@ class checkboxWindow(ctk.CTkToplevel):
             self.saveToDatabase()
             self.destroy()
 
+
     def saveToDatabase(self):
         from assets.libs.Database import Database
         from assets.libs.Module import Module
@@ -65,7 +67,6 @@ class checkboxWindow(ctk.CTkToplevel):
         if self.database.insert_subject(namaSub, banyakSoal, banyakPilihan, str(self.jawaban), self.id_login):
             messagebox.showinfo("Success", "Subject "+ namaSub +" added!")
             self.destroy()
-
         else:
             messagebox.showwarning("Invalid", "Double check before submit")
 
@@ -159,6 +160,12 @@ class SubjectPage(ctk.CTk):
         mainMenu = MainMenu()
         mainMenu.mainloop()
 
+    
+    def clearNewSubEntry(self):
+        self.namaSub.delete(0, END)
+        self.banyakSoal.delete(0, END)
+        self.banyakPilgan.delete(0, END)
+
 
     def show_checkbox_window(self):
         global banyakSoal, namaSub, banyakPilihan
@@ -166,10 +173,15 @@ class SubjectPage(ctk.CTk):
             messagebox.showerror("Error", "Input must be a number")
             return
         else:
-            banyakSoal = int(self.banyakSoal.get())
-            namaSub = self.namaSub.get()
-            banyakPilihan = int(self.banyakPilgan.get())
-            self.open_toplevel()
+            self.cekKembar = self.database.checkExist('sub_name', 'subjects', 'sub_name="' + str(self.namaSub.get()) + '"')
+            if self.cekKembar:
+                messagebox.showwarning("Duplicate", "Subject already existed")
+            else:
+                banyakSoal = int(self.banyakSoal.get())
+                namaSub = self.namaSub.get()
+                banyakPilihan = int(self.banyakPilgan.get())
+                self.open_toplevel()
+                self.clearNewSubEntry()
     
 
     def open_toplevel(self):

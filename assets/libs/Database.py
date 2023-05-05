@@ -151,9 +151,21 @@ class Database:
         else:
             return None
 
-    
+    # ambil id data apapun
     def getAnyID(self, id, table, where):
         query = "SELECT {} FROM {} WHERE {}".format(id, table, where)
         self.cur.execute(query)
         any_id = self.cur.fetchone()[0]
         return any_id
+    
+
+    def checkExist(self, attributes, table, where):
+        query = "SELECT {} FROM {} WHERE {}".format(attributes, table, where)
+        self.cur.execute(query)
+        rows = self.cur.fetchall()
+        if len(rows) != 0:
+            return True
+        else:
+            return False
+
+
