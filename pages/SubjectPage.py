@@ -157,7 +157,10 @@ class SubjectPage(ctk.CTk):
 
     def updateListSubject(self):
         self.dataSubject = self.database.selectAttributes('sub_name', 'subjects', order='sub_name asc')
-        self.subject_names = ['No Subject'] if len(self.dataSubject) == 0 else [row[0] for row in self.dataSubject]
+        if self.dataSubject is not None:
+            self.subject_names = ['No Subject'] if len(self.dataSubject) == 0 else [row[0] for row in self.dataSubject]
+        else:
+            self.subject_names = ['No Subject']
 
         for i, row in enumerate(self.subject_names):
             label = ctk.CTkLabel(self.scrollable_frame, text=row)

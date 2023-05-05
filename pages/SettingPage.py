@@ -27,8 +27,11 @@ class SettingPage(ctk.CTkToplevel):
         self.cur = self.conn.cursor()
 
         # ambil daftar subject
-        self.dataSubject = self.database.selectAttributes('sub_name', 'subjects')
-        self.subject_names = ['No Subject'] if len(self.dataSubject) == 0 else [row[0] for row in self.dataSubject]
+        self.dataSubject = self.database.selectAttributes('sub_name', 'subjects', order='sub_name asc')
+        if self.dataSubject is not None:
+            self.subject_names = ['No Subject'] if len(self.dataSubject) == 0 else [row[0] for row in self.dataSubject]
+        else:
+            self.subject_names = ['No Subject']
 
         self.id_login = self.database.selectActive()
         self.dataSetting = self.database.selectAttributes('*', 'settings', 'id_login=' + str(self.id_login))
