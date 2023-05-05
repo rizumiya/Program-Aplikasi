@@ -13,7 +13,7 @@ class LoginForm(ctk.CTk):
         self.resizable(False, False)
         self.iconbitmap('./assets/images/OMRay.ico')
 
-        #creating database
+        # creating database
 
         self.SQLPATH = os.path.join(os.path.dirname(__file__), '..', 'assets', 'temps', 'omr.db')
         global conn

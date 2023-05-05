@@ -23,7 +23,8 @@ class Database:
             sub_name text,
             sub_totalQuestion integer,
             sub_choices integer,
-            sub_answer text
+            sub_answer text,
+            id_login integer
         )""")
         
         self.conn.execute("""
@@ -53,8 +54,8 @@ class Database:
         self.conn.commit()
 
     # subject
-    def insert_subject(self, sub_name, sub_totalQuestion, sub_choices, sub_answer):
-        self.cur.execute("INSERT INTO subjects (sub_name, sub_totalQuestion, sub_choices, sub_answer) VALUES (?, ?, ?, ?)", (sub_name, sub_totalQuestion, sub_choices, sub_answer))
+    def insert_subject(self, sub_name, sub_totalQuestion, sub_choices, sub_answer, id_login):
+        self.cur.execute("INSERT INTO subjects (sub_name, sub_totalQuestion, sub_choices, sub_answer, id_login) VALUES (?, ?, ?, ?, ?)", (sub_name, sub_totalQuestion, sub_choices, sub_answer, id_login))
         self.conn.commit()
 
 
