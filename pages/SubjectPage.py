@@ -45,7 +45,7 @@ class checkboxWindow(ctk.CTkToplevel):
             self.checkbox_values.clear()
 
 
-class CustomTkinterApp(ctk.CTk):
+class SubjectPage(ctk.CTk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.title("OMRay | Subject")
@@ -60,6 +60,15 @@ class CustomTkinterApp(ctk.CTk):
 
         self.submit_button = ctk.CTkButton(self.master, text="Submit", command=self.show_checkbox_window)
         self.submit_button.pack()
+
+        self.protocol("WM_DELETE_WINDOW", self.kembaliKeMenu)
+
+    
+    def kembaliKeMenu(self):
+        self.destroy()
+        from MainMenu import MainMenu
+        mainMenu = MainMenu()
+        mainMenu.mainloop()
 
 
     def show_checkbox_window(self):
@@ -84,5 +93,5 @@ class CustomTkinterApp(ctk.CTk):
 
 
 if __name__ == "__main__":
-    app = CustomTkinterApp()
+    app = SubjectPage()
     app.mainloop()

@@ -80,7 +80,7 @@ class MainMenu(ctk.CTk):
         self.addsbj_button = ctk.CTkButton(self, text="Subject", image=self.img_addsbj, compound=TOP, 
                                     fg_color="#fff", hover_color="#B2B2B2", text_color="#333030", 
                                     corner_radius=25, width=200, height=180, cursor='hand2', 
-                                    font=('Fredoka One', 24, 'bold'))
+                                    font=('Fredoka One', 24, 'bold'), command=self.bukaSubject)
         self.addsbj_button.place(x=30, y=210)
 
         # add record
@@ -262,5 +262,5 @@ if __name__ == '__main__':
     app = MainMenu()
     app.autoRun()
     app.ambilSetting()
-    
+
     app.mainloop()
