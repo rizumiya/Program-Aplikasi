@@ -15,7 +15,7 @@ class SettingPage(ctk.CTkToplevel):
         self.resizable(False, False)
         self.iconbitmap('assets/images/OMRay.ico')
 
-        #variable
+        # variable
         
         self.database = Database()
         self.my_module = Module()
@@ -27,23 +27,9 @@ class SettingPage(ctk.CTkToplevel):
         self.conn = sqlite3.connect(self.SQLPATH)
         self.cur = self.conn.cursor()
 
-        # contoh kode ambil jawaban dari subject tertentu
-        self.cur.execute('SELECT sub_answer FROM subjects WHERE sub_id = "1"')
-        self.kunci_jwb = self.cur.fetchall()
-        if self.kunci_jwb:
-            self.jawaban_string = self.kunci_jwb[0][0]
-            self.jawaban_array = self.jawaban_string.split(",")
-            # kode lainnya di sini
-        else:
-            print("Data kunci jawaban tidak ditemukan")
-        # print(jawaban_array)
-
         # ambil daftar subject
-        self.cur.execute("SELECT sub_name FROM subjects")
-        # simpan hasil query ke dalam array
-        self.data = self.cur.fetchall()
-        self.subject_names = ['No Subject'] if len(self.data) == 0 else [row[0] for row in self.data]
-
+        self.dataSubject = self.database.selectAttributes('sub_name', 'subjects')
+        self.subject_names = ['No Subject'] if len(self.dataSubject) == 0 else [row[0] for row in self.dataSubject]
 
         self.id_login = self.database.selectActive()
         self.dataSetting = self.database.selectAttributes('*', 'settings', 'id_login=' + str(self.id_login))
@@ -53,7 +39,6 @@ class SettingPage(ctk.CTkToplevel):
         self.autoSave = self.dataSetting[0][5]
         
         # ===========================================================================================
-    
 
         # Menambahkan judul
         self.heading = ctk.CTkLabel(self, text='Setting', text_color='#fff', font=('Fugaz One', 36, 'bold'))
@@ -117,7 +102,6 @@ class SettingPage(ctk.CTkToplevel):
 
         self.auto_save_checkbox = ctk.CTkCheckBox(self.defaultScanScrollableFrame, text='Auto Save', variable=self.auto_save_var)
         self.auto_save_checkbox.place(x=160, y=110)
-
 
         # bagian kanan =============================================================================
 

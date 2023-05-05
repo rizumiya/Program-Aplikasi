@@ -36,7 +36,7 @@ class MainMenu(ctk.CTk):
         self.conn = sqlite3.connect(self.SQLPATH)
         self.cur = self.conn.cursor()
 
-        #variable
+        # variable
 
         self.database = Database()
         self.my_module = Module()
@@ -63,11 +63,9 @@ class MainMenu(ctk.CTk):
                                         bg_color='transparent',font=('Fresca', 16))
         self.subheading2.place(x=210, y=135)
 
-        # end of header ===========================================
-
         # buttons =================================================
 
-        # Logout button
+        # Logout
         self.img_logout = ctk.CTkImage(light_image=Image.open("assets/images/logout.png"), size=(20, 20))
 
         self.logout_button = ctk.CTkButton(self, text="Logout", image=self.img_logout, compound=RIGHT, 
@@ -125,9 +123,6 @@ class MainMenu(ctk.CTk):
                                     font=('Fredoka One', 32, 'bold'), command=self.quickScan)
         self.scan_button.place(x=30, y=610)
 
-        # end of button ===========================================
-
-
         # scrollable frame ========================================
 
         self.scrollable_frame = ctk.CTkScrollableFrame(self, width=430, height=560)
@@ -144,7 +139,7 @@ class MainMenu(ctk.CTk):
         self.ambilSetting()
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
-    # function load data excel
+    # function 
 
     def loadExcel(self):
         if not os.path.exists(self.xlPath):
@@ -231,6 +226,13 @@ class MainMenu(ctk.CTk):
         from pages.SettingPage import SettingPage
         setting_page = SettingPage(self, "OMRay | Setting")
         setting_page.mainloop()
+
+
+    def bukaSubject(self):
+        self.destroy()
+        from pages.SubjectPage import SubjectPage
+        subject_page = SubjectPage()
+        subject_page.mainloop()
 
 
     def on_closing(self):

@@ -84,8 +84,10 @@ class Database:
 
 
     # operasi select
-    def selectAttributes(self, attributes, table, where):
-        query = "SELECT {} FROM {} WHERE {}".format(attributes, table, where)
+    def selectAttributes(self, attributes, table, where=None):
+        query = "SELECT {} FROM {} ".format(attributes, table)
+        if where:
+            query += "WHERE {}".format(where)
         self.cur.execute(query)
         rows = self.cur.fetchall()
         datas = []
@@ -101,3 +103,8 @@ class Database:
         return id_login
     
     
+    def getAnyID(self, id, table, where):
+        query = "SELECT {} FROM {} WHERE {}".format(id, table, where)
+        self.cur.execute(query)
+        any_id = self.cur.fetchone()[0]
+        return any_id
