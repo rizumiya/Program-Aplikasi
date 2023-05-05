@@ -40,49 +40,93 @@ class Database:
 
     # login 
     def insert_login(self, username, password, status):
-        self.cur.execute("INSERT INTO logins (username, password, status) VALUES (?, ?, ?)", (username, password, status))
-        self.conn.commit()
+        try:
+            self.cur.execute("INSERT INTO logins (username, password, status) VALUES (?, ?, ?)", (username, password, status))
+            self.conn.commit()
+            return True
+        except:
+            self.conn.rollback()
+            return False
 
 
     def update_login(self, login_id, username, password, status):
-        self.cur.execute("UPDATE logins SET username=?, password=?, status=? WHERE login_id=?", (username, password, status, login_id))
-        self.conn.commit()
+        try:
+            self.cur.execute("UPDATE logins SET username=?, password=?, status=? WHERE login_id=?", (username, password, status, login_id))
+            self.conn.commit()
+            return True
+        except:
+            self.conn.rollback()
+            return False
 
 
     def delete_login(self, login_id):
-        self.cur.execute("DELETE FROM logins WHERE login_id=?", (login_id,))
-        self.conn.commit()
+        try:
+            self.cur.execute("DELETE FROM logins WHERE login_id=?", (login_id,))
+            self.conn.commit()
+            return True
+        except:
+            self.conn.rollback()
+            return False
 
     # subject
     def insert_subject(self, sub_name, sub_totalQuestion, sub_choices, sub_answer, id_login):
-        self.cur.execute("INSERT INTO subjects (sub_name, sub_totalQuestion, sub_choices, sub_answer, id_login) VALUES (?, ?, ?, ?, ?)", (sub_name, sub_totalQuestion, sub_choices, sub_answer, id_login))
-        self.conn.commit()
+        try:
+            self.cur.execute("INSERT INTO subjects (sub_name, sub_totalQuestion, sub_choices, sub_answer, id_login) VALUES (?, ?, ?, ?, ?)", (sub_name, sub_totalQuestion, sub_choices, sub_answer, id_login))
+            self.conn.commit()
+            return True
+        except:
+            self.conn.rollback()
+            return False
 
 
     def update_subject(self, sub_id, sub_name, sub_totalQuestion, sub_choices, sub_answer):
-        self.cur.execute("UPDATE subjects SET sub_name=?, sub_totalQuestion=?, sub_choices=?, sub_answer=? WHERE sub_id=?", (sub_name, sub_totalQuestion, sub_choices, sub_answer, sub_id))
-        self.conn.commit()
+        try:
+            self.cur.execute("UPDATE subjects SET sub_name=?, sub_totalQuestion=?, sub_choices=?, sub_answer=? WHERE sub_id=?", (sub_name, sub_totalQuestion, sub_choices, sub_answer, sub_id))
+            self.conn.commit()
+            return True
+        except:
+            self.conn.rollback()
+            return False
 
 
     def delete_subject(self, sub_id):
-        self.cur.execute("DELETE FROM subjects WHERE sub_id=?", (sub_id,))
-        self.conn.commit()
+        try:
+            self.cur.execute("DELETE FROM subjects WHERE sub_id=?", (sub_id,))
+            self.conn.commit()
+            return True
+        except:
+            self.conn.rollback()
+            return False
 
     # setting
     def insert_setting(self, id_login, cameraNo, def_subject, showAnswer, autoSave):
-        self.cur.execute("INSERT INTO settings (id_login, cameraNo, def_subject, showAnswer, autoSave) VALUES (?, ?, ?, ?, ?)", (id_login, cameraNo, def_subject, showAnswer, autoSave))
-        self.conn.commit()
+        try:
+            self.cur.execute("INSERT INTO settings (id_login, cameraNo, def_subject, showAnswer, autoSave) VALUES (?, ?, ?, ?, ?)", (id_login, cameraNo, def_subject, showAnswer, autoSave))
+            self.conn.commit()
+            return True
+        except:
+            self.conn.rollback()
+            return False
 
 
     def update_setting(self, set_id, id_login, cameraNo, def_subject, showAnswer, autoSave):
-        self.cur.execute("UPDATE settings SET id_login=?, cameraNo=?, def_subject=?, showAnswer=?, autoSave=? WHERE set_id=?", (id_login, cameraNo, def_subject, showAnswer, autoSave, set_id))
-        self.conn.commit()
+        try:
+            self.cur.execute("UPDATE settings SET id_login=?, cameraNo=?, def_subject=?, showAnswer=?, autoSave=? WHERE set_id=?", (id_login, cameraNo, def_subject, showAnswer, autoSave, set_id))
+            self.conn.commit()
+            return True
+        except:
+            self.conn.rollback()
+            return False
 
 
     def delete_setting(self, set_id):
-        self.cur.execute("DELETE FROM settings WHERE set_id=?", (set_id,))
-        self.conn.commit()
-
+        try:
+            self.cur.execute("DELETE FROM settings WHERE set_id=?", (set_id,))
+            self.conn.commit()
+            return True
+        except:
+            self.conn.rollback()
+            return False
 
     # operasi select
     def selectAttributes(self, attributes, table, where=None):
@@ -98,7 +142,6 @@ class Database:
             return datas
         return None
 
-    
     # select active
     def selectActive(self):
         self.cur.execute("SELECT login_id FROM logins WHERE status='on'")
@@ -108,7 +151,6 @@ class Database:
         else:
             return None
 
-    
     
     def getAnyID(self, id, table, where):
         query = "SELECT {} FROM {} WHERE {}".format(id, table, where)

@@ -34,6 +34,11 @@ class Module:
     def pisah_karakter(text):
         karakter = ', '.join(text)
         return karakter
+    
+    def convertArraykeString(self, text):
+        string = ", ".join(str(x) for x in text)
+        return string
+
 
 
 

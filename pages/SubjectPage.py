@@ -21,7 +21,6 @@ class checkboxWindow(ctk.CTkToplevel):
         # variable
         
         self.checkbox_values = []
-        print(banyakSoal)
         self.jawaban = str
 
         # perulangan untuk membuat widget checkbox
@@ -46,19 +45,27 @@ class checkboxWindow(ctk.CTkToplevel):
 
         if len(self.checkbox_values) == int(banyakSoal):
             self.grab_release()
+            self.saveToDatabase()
             self.destroy()
-            self.checkbox_values.clear()
 
     def saveToDatabase(self):
         from assets.libs.Database import Database
+        from assets.libs.Module import Module
 
         global banyakSoal, namaSub, banyakPilihan
         
         self.database = Database()
-        id_login = self.database.selectActive()
-        if self.database.insert_subject(namaSub, banyakSoal, banyakPilihan, self.jawaban, id_login):
+        self.module = Module()
+
+        self.jawaban = self.module.convertArraykeString(self.checkbox_values)
+        self.checkbox_values.clear()
+
+        self.id_login = self.database.selectActive()
+        print(namaSub, banyakSoal, banyakPilihan, self.jawaban, self.id_login)
+        if self.database.insert_subject(namaSub, banyakSoal, banyakPilihan, str(self.jawaban), self.id_login):
             messagebox.showinfo("Success", "Subject "+ namaSub +" added!")
             self.destroy()
+
         else:
             messagebox.showwarning("Invalid", "Double check before submit")
 
