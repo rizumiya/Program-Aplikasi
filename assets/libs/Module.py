@@ -7,7 +7,6 @@ import sqlite3
 import os
 
 from assets.libs.Database import Database
-from assets.libs.Module import Module
 
 class Module:
     def __init__(self):
@@ -18,7 +17,6 @@ class Module:
         # variable
         
         self.database = Database()
-        self.my_module = Module()
 
     # ambil jawaban dari subject tertentu
     def ambilJawaban(self, sub_name):

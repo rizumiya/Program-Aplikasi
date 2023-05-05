@@ -90,17 +90,23 @@ class Database:
             query += "WHERE {}".format(where)
         self.cur.execute(query)
         rows = self.cur.fetchall()
-        datas = []
-        for row in rows:
-            datas.append(row)
-        return datas
+        if rows:
+            datas = []
+            for row in rows:
+                datas.append(row)
+            return datas
+        return None
 
     
     # select active
     def selectActive(self):
         self.cur.execute("SELECT login_id FROM logins WHERE status='on'")
-        id_login = self.cur.fetchone()[0]
-        return id_login
+        id_login = self.cur.fetchone()
+        if id_login:
+            return id_login[0]
+        else:
+            return None
+
     
     
     def getAnyID(self, id, table, where):

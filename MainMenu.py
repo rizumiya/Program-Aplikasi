@@ -136,7 +136,6 @@ class MainMenu(ctk.CTk):
                     fg_color='#fff').pack(padx=5, pady=10)
 
         self.tree = self.loadExcel()
-        self.ambilSetting()
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     # function 
@@ -262,4 +261,6 @@ class MainMenu(ctk.CTk):
 if __name__ == '__main__':
     app = MainMenu()
     app.autoRun()
+    app.ambilSetting()
+    
     app.mainloop()
