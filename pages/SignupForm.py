@@ -14,7 +14,6 @@ class SignupForm(ctk.CTk):
         self.iconbitmap('./assets/images/OMRay.ico')
 
         self.SQLPATH = os.path.join(os.path.dirname(__file__), '..', 'assets', 'temps', 'omr.db')
-        global conn
         self.conn = sqlite3.connect(self.SQLPATH)
         self.cur = self.conn.cursor()
 

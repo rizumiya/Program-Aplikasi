@@ -102,18 +102,10 @@ class SubjectPage(ctk.CTk):
         self.listSubjectlbl = ctk.CTkLabel(self.master, text="List of Subjects")
         self.listSubjectlbl.place(x=20, y=70)
 
-        self.scrollable_frame = ctk.CTkScrollableFrame(self.master, width=110 ,height=40)
+        self.scrollable_frame = ctk.CTkScrollableFrame(self.master, width=110, height=40)
         self.scrollable_frame.place(x=20, y=100)
 
-        # ambil daftar subject
-        # self.dataSubject = self.database.selectAttributes('sub_name', 'subjects')
-        # self.subject_names = ['No Subject'] if len(self.dataSubject) == 0 else [row[0] for row in self.dataSubject]
-
-        # for i, row in enumerate(self.subject_names):
-        #     label = ctk.CTkLabel(self.scrollable_frame.interior, text=row[1])
-        #     label.grid(row=i, column=0, sticky="w")
-
-        self.backBtn = ctk.CTkButton(self.master, text="Back", height=35)
+        self.backBtn = ctk.CTkButton(self.master, text="Back", height=35, command=self.kembaliKeMenu)
         self.backBtn.place(x=20, y=335)
 
         # bagian kanan
@@ -151,9 +143,27 @@ class SubjectPage(ctk.CTk):
         self.saveBtn.place(x=540, y=335)
 
 
+        self.focused = False
         self.protocol("WM_DELETE_WINDOW", self.kembaliKeMenu)
+        self.bind("<FocusIn>", self.on_focus_in)
+        
 
-    
+    def on_focus_in(self, event):
+        if not self.focused:
+            self.focused = True
+            self.updateListSubject()
+            self.focused = False
+
+
+    def updateListSubject(self):
+        self.dataSubject = self.database.selectAttributes('sub_name', 'subjects', order='sub_name asc')
+        self.subject_names = ['No Subject'] if len(self.dataSubject) == 0 else [row[0] for row in self.dataSubject]
+
+        for i, row in enumerate(self.subject_names):
+            label = ctk.CTkLabel(self.scrollable_frame, text=row)
+            label.grid(row=i, column=0, sticky="w")
+
+
     def kembaliKeMenu(self):
         self.destroy()
         from MainMenu import MainMenu

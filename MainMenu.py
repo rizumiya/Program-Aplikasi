@@ -32,7 +32,6 @@ class MainMenu(ctk.CTk):
         # creating database
         
         self.SQLPATH = os.path.join(os.path.dirname(__file__), 'assets', 'temps', 'omr.db')
-        global conn
         self.conn = sqlite3.connect(self.SQLPATH)
         self.cur = self.conn.cursor()
 

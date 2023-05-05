@@ -23,7 +23,6 @@ class SettingPage(ctk.CTkToplevel):
         # ambil data dari database ================================================================
 
         self.SQLPATH = os.path.join(os.path.dirname(__file__), '..', 'assets', 'temps', 'omr.db')
-        global conn
         self.conn = sqlite3.connect(self.SQLPATH)
         self.cur = self.conn.cursor()
 
@@ -78,6 +77,7 @@ class SettingPage(ctk.CTkToplevel):
         self.subject_box = ctk.CTkOptionMenu(master=self.defaultScanScrollableFrame,
                                     width=190,
                                     values=self.subject_names)
+        self.subject_box.set(self.selectedSub)
         self.subject_box.place(x=100, y=60)
 
 
@@ -136,7 +136,6 @@ class SettingPage(ctk.CTkToplevel):
         self.simpan_pengaturan(self.id_login,self.ambilCam(),self.subject_box.get(),self.show_answer_checkbox.get(),self.auto_save_checkbox.get()))
         self.save_button.place(x=540, y=330)
     
-        # self.dumpSQL()
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         # function ======================================================================================================
@@ -163,12 +162,6 @@ class SettingPage(ctk.CTkToplevel):
         messagebox.showinfo('Setting', self.mesg)
         self.conn.close()
         self.destroy()
-
-
-    def dumpSQL(self):
-        with open('database.txt', 'w') as f:
-            for line in self.conn.iterdump():
-                f.write('%s\n' % line)
 
 
     def ambilCam(self):

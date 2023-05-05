@@ -129,10 +129,12 @@ class Database:
             return False
 
     # operasi select
-    def selectAttributes(self, attributes, table, where=None):
+    def selectAttributes(self, attributes, table, where=None, order=None):
         query = "SELECT {} FROM {} ".format(attributes, table)
         if where:
             query += "WHERE {}".format(where)
+        if order:
+            query += "ORDER BY {}".format(order)
         self.cur.execute(query)
         rows = self.cur.fetchall()
         if rows:
@@ -168,4 +170,9 @@ class Database:
         else:
             return False
 
+
+    def dumpSQL(self):
+        with open('database.txt', 'w') as f:
+            for line in self.conn.iterdump():
+                f.write('%s\n' % line)
 
