@@ -4,6 +4,9 @@ from tkinter import *
 import sqlite3
 import os
 
+from assets.libs.Database import Database
+from assets.libs.Module import Module
+
 class SettingPage(ctk.CTkToplevel):
     def __init__(self, parent, title, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
@@ -11,6 +14,11 @@ class SettingPage(ctk.CTkToplevel):
         self.geometry('700x380+1000+70')
         self.resizable(False, False)
         self.iconbitmap('assets/images/OMRay.ico')
+
+        #variable
+        
+        self.database = Database()
+        self.my_module = Module()
 
         # ambil data dari database ================================================================
 
@@ -37,13 +45,13 @@ class SettingPage(ctk.CTkToplevel):
         self.subject_names = ['No Subject'] if len(self.data) == 0 else [row[0] for row in self.data]
 
 
-        self.id_login = self.ambil_login()
-
-        self.cur.execute("SELECT cameraNo, def_subject, showAnswer, autoSave FROM settings WHERE id_login=?",(self.id_login,))
-        self.rows = self.cur.fetchall()
-        if self.rows:
-            self.selectedCamera, self.selectedSub, self.showAnswer, self.autoSave = self.rows[0]
-
+        self.id_login = self.database.selectActive()
+        self.dataSetting = self.database.selectAttributes('*', 'settings', 'id_login=' + str(self.id_login))
+        self.selectedCamera = self.dataSetting[0][2]
+        self.selectedSub = self.dataSetting[0][3]
+        self.showAnswer = self.dataSetting[0][4]
+        self.autoSave = self.dataSetting[0][5]
+        
         # ===========================================================================================
     
 
@@ -148,16 +156,11 @@ class SettingPage(ctk.CTkToplevel):
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         # function ======================================================================================================
-    
-    
-    def ambil_login(self):
-        self.cur.execute("SELECT login_id FROM logins WHERE status='on'")
-        self.id_long = self.cur.fetchone()
-        return self.id_long[0]
 
 
     def on_closing(self):
-        if messagebox.askokcancel("Quit", "Unsaved changes will be discarded, continue?"):
+        if messagebox.askokcancel("Quit", "Unsaved changes will be discarded, continue?"): 
+            self.conn.close()
             self.destroy()
 
 
@@ -174,6 +177,7 @@ class SettingPage(ctk.CTkToplevel):
         self.mesg = self.updatePass()
 
         messagebox.showinfo('Setting', self.mesg)
+        self.conn.close()
         self.destroy()
 
 

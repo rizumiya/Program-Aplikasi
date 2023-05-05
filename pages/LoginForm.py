@@ -79,6 +79,7 @@ class LoginForm(ctk.CTk):
             self.conn.execute(
                 "UPDATE logins SET status = 'on' WHERE username=? and password=?", (self.username, self.password))
             self.conn.commit()
+            self.conn.close()
             self.destroy()
             from MainMenu import MainMenu
             mainMenu = MainMenu()
@@ -88,6 +89,7 @@ class LoginForm(ctk.CTk):
 
 
     def signUp_cmd(self):
+        self.conn.close()
         self.destroy()
         from pages.SignupForm import SignupForm
         signup_form = SignupForm()
@@ -96,4 +98,5 @@ class LoginForm(ctk.CTk):
     
     def on_closing(self):
         if messagebox.askokcancel("Quit", "Do you want to quit?"):
+            self.conn.close()
             self.destroy()

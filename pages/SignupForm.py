@@ -93,6 +93,7 @@ class SignupForm(ctk.CTk):
             self.conn.execute("INSERT INTO settings(id_login, cameraNo, showAnswer, autoSave) VALUES (?,0,1,1)",(self.id_long[0],))
             self.conn.commit()
             messagebox.showinfo('Sign Up', 'Account created successfully')
+            self.conn.close()
             self.destroy()
             from pages.LoginForm import LoginForm
             login_form = LoginForm()
@@ -100,7 +101,9 @@ class SignupForm(ctk.CTk):
         else:
             messagebox.showerror('Invalid', "Password doesn't match")
 
+
     def signIn_cmd(self):
+        self.conn.close()
         self.destroy()
         from pages.LoginForm import LoginForm
         login_form = LoginForm()

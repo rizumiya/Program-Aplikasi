@@ -81,3 +81,23 @@ class Database:
     def delete_setting(self, set_id):
         self.cur.execute("DELETE FROM settings WHERE set_id=?", (set_id,))
         self.conn.commit()
+
+
+    # operasi select
+    def selectAttributes(self, attributes, table, where):
+        query = "SELECT {} FROM {} WHERE {}".format(attributes, table, where)
+        self.cur.execute(query)
+        rows = self.cur.fetchall()
+        datas = []
+        for row in rows:
+            datas.append(row)
+        return datas
+
+    
+    # select active
+    def selectActive(self):
+        self.cur.execute("SELECT login_id FROM logins WHERE status='on'")
+        id_login = self.cur.fetchone()[0]
+        return id_login
+    
+    

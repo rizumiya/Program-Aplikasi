@@ -40,10 +40,10 @@ class MainMenu(ctk.CTk):
 
         self.database = Database()
         self.my_module = Module()
-        self.camNo = int
+        self.camNo = str
         self.subj = str
-        self.shwAns = int
-        self.autoSv = int
+        self.shwAns = str
+        self.autoSv = str
 
         # header ===============================================
 
@@ -141,7 +141,7 @@ class MainMenu(ctk.CTk):
                     fg_color='#fff').pack(padx=5, pady=10)
 
         self.tree = self.loadExcel()
-        # self.ambilSetting()
+        self.ambilSetting()
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     # function load data excel
@@ -239,12 +239,12 @@ class MainMenu(ctk.CTk):
 
 
     def ambilSetting(self):
-        from pages.SettingPage import SettingPage
-        setting_page = SettingPage(self, "test")
-        self.cur.execute("SELECT cameraNo, def_subject, showAnswer, autoSave FROM settings WHERE id_login=?",(setting_page.ambil_login(),))
-        self.rows = self.cur.fetchall()
-        if self.rows:
-            self.camNo , self.subj, self.shwAns, self.autoSv = self.rows[0]
+        self.id_login = self.database.selectActive()
+        self.dataSetting = self.database.selectAttributes('*', 'settings', 'id_login=' + str(self.id_login))
+        self.camNo = self.dataSetting[0][2]
+        self.subj = self.dataSetting[0][3]
+        self.shwAns = self.dataSetting[0][4]
+        self.autoSv = self.dataSetting[0][5]
 
 
     def quickScan(self):
