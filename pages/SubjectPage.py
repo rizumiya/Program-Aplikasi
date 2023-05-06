@@ -9,6 +9,7 @@ import sys
 banyakSoal = 0
 namaSub = str
 banyakPilihan = 0
+subjectName = []
 
 class checkboxWindow(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
@@ -152,27 +153,73 @@ class SubjectPage(ctk.CTk):
         self.subEditFrame = ctk.CTkFrame(self.master, width=250, height=220)
         self.subEditFrame.place(x=430, y=100)
 
+        self.subject_label = ctk.CTkLabel(self.subEditFrame, text="Subject : ")
+        self.subject_label.place(x=20, y=10)
+
+        self.action_label = ctk.CTkLabel(self.subEditFrame, text="Action : ")
+        self.action_label.place(x=20, y=80)
+        
+        self.editSubBtn = ctk.CTkButton(self.subEditFrame, text="Edit Subject", height=35 ,command=self.updateSubCmd)
+        self.editSubBtn.place(relx=0.5, y=135, anchor=CENTER)
+
+        self.deleteSubBtn = ctk.CTkButton(self.subEditFrame, text="Delete Subject", height=35 ,command=self.deleteSubCmd, fg_color="#a13535", hover_color="#a61717")
+        self.deleteSubBtn.place(relx=0.5, y=185, anchor=CENTER)
+
         self.focused = False
         self.protocol("WM_DELETE_WINDOW", self.kembaliKeMenu)
         self.bind("<FocusIn>", self.on_focus_in)
-        
+    
+
+    def deleteSubCmd(self):
+        from assets.libs.Database import Database
+
+        self.database = Database()
+        if self.subject_box.get() is not "No Subject":
+            if messagebox.askokcancel("Subject deletion", "Are you sure want to delete subject " + self.subject_box.get() + "?"):
+                self.idSub = self.database.getAnyID('sub_id', 'subjects', 'sub_name="' + str(self.subject_box.get()) + '"' )
+                self.row = self.database.selectAttributes('*', 'settings', 'id_login=' + str(self.database.selectActive()))
+                self.database.update_setting(self.row[0][0],self.row[0][1],self.row[0][2],"No Subject",self.row[0][4],self.row[0][5])
+                if self.database.delete_subject(self.idSub):
+                    messagebox.showinfo("Success", "Subject successfully deleted!")
+        else: 
+            messagebox.showwarning("Error", "No subject selected")
+
+
+
+    def updateSubCmd(self):
+        messagebox.showwarning("Not available", "This feature is currently unavailable")
+
+
+    def buatUlangWidget(self):
+        global subjectName
+        self.subject_box = ctk.CTkOptionMenu(master=self.subEditFrame,
+                                    width=190,
+                                    values=subjectName)
+        self.subject_box.place(x=20, y=40)
+
 
     def on_focus_in(self, event):
         if not self.focused:
             self.focused = True
+            self.buatUlangWidget()
             self.updateListSubject()
             self.focused = False
-
+    
 
     def updateListSubject(self):
+        global subjectName
         self.dataSubject = self.database.selectAttributes('sub_name', 'subjects', order='sub_name asc')
         if self.dataSubject is not None:
             self.subject_names = ['No Subject'] if len(self.dataSubject) == 0 else [row[0] for row in self.dataSubject]
         else:
             self.subject_names = ['No Subject']
+        subjectName = self.subject_names
 
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
+        
+        self.subject_box.destroy()
+        self.buatUlangWidget()
 
         for i, row in enumerate(self.subject_names):
             label = ctk.CTkLabel(self.scrollable_frame, text=row)

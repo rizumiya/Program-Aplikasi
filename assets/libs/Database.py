@@ -6,6 +6,8 @@ class Database:
         self.SQLPATH = os.path.join(os.path.dirname(__file__), '..', 'temps', 'omr.db')
         self.conn = sqlite3.connect(self.SQLPATH)
         self.cur = self.conn.cursor()
+        
+        self.dumpSQL()
 
     # buat tabel
     def createTables(self):
@@ -175,4 +177,3 @@ class Database:
         with open('database.txt', 'w') as f:
             for line in self.conn.iterdump():
                 f.write('%s\n' % line)
-
