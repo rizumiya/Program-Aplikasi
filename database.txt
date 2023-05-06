@@ -5,7 +5,7 @@ CREATE TABLE logins (
             password text,
             status text
         );
-INSERT INTO "logins" VALUES(1,'qwe','123','on');
+INSERT INTO "logins" VALUES(5,'w','w','on');
 CREATE TABLE settings (
             set_id integer primary key autoincrement,
             id_login integer, 
@@ -14,7 +14,7 @@ CREATE TABLE settings (
             showAnswer integer, 
             autoSave integer
         );
-INSERT INTO "settings" VALUES(1,1,1,'No Subject',1,0);
+INSERT INTO "settings" VALUES(5,5,0,'No Subject',1,1);
 CREATE TABLE subjects (
             sub_id integer primary key autoincrement,
             sub_name text,
@@ -24,7 +24,7 @@ CREATE TABLE subjects (
             id_login integer
         );
 DELETE FROM "sqlite_sequence";
-INSERT INTO "sqlite_sequence" VALUES('logins',1);
-INSERT INTO "sqlite_sequence" VALUES('settings',1);
+INSERT INTO "sqlite_sequence" VALUES('logins',5);
+INSERT INTO "sqlite_sequence" VALUES('settings',5);
 INSERT INTO "sqlite_sequence" VALUES('subjects',2);
 COMMIT;

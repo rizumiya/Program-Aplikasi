@@ -95,7 +95,6 @@ class SettingPage(ctk.CTkToplevel):
 
         self.show_answer_checkbox.place(x=10, y=110)
 
-
         self.auto_save_var = ctk.BooleanVar()
 
         if self.autoSave == 1:
@@ -128,10 +127,10 @@ class SettingPage(ctk.CTkToplevel):
                         bg_color='transparent', font=('Fresca', 14))
         self.newPass_entry.place(x=10, y=90)
 
-        self.reset_button = ctk.CTkButton(self.accountScanScrollableFrame, text="Reset account", width=130, height=35, fg_color="#a13535", hover_color="#a61717")
+        self.reset_button = ctk.CTkButton(self.accountScanScrollableFrame, text="Reset account", width=130, height=35, fg_color="#a13535", hover_color="#a61717", command=self.resetAccount)
         self.reset_button.place(x=10, y=150)
 
-        self.delete_button = ctk.CTkButton(self.accountScanScrollableFrame, text="Delete account", width=130, height=35, fg_color="#a13535", hover_color="#a61717")
+        self.delete_button = ctk.CTkButton(self.accountScanScrollableFrame, text="Delete account", width=130, height=35, fg_color="#a13535", hover_color="#a61717", command=self.deleteAccount)
         self.delete_button.place(x=150, y=150)
 
         # Menambahkan tombol untuk menyimpan pengaturan
@@ -142,6 +141,42 @@ class SettingPage(ctk.CTkToplevel):
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         # function ======================================================================================================
+
+    def deleteAccount(self):
+        self.id_login = self.database.selectActive() 
+        if messagebox.askokcancel("Delete account", "Are you sure want to delete your account?"):
+            try:
+                self.cur.execute("DELETE FROM subjects WHERE id_login=?", (self.id_login,))
+                self.cur.execute("DELETE FROM settings WHERE id_login=?", (self.id_login,))
+                self.cur.execute("DELETE FROM logins WHERE login_id=?", (self.id_login,))
+
+                self.conn.commit()
+                messagebox.showinfo("Success","Account has been deleted")
+                self.master.destroy()
+                from pages.LoginForm import LoginForm
+                login_form = LoginForm()
+                login_form.mainloop()
+                return True
+            except:
+                self.conn.rollback()
+                return False
+
+
+    def resetAccount(self):
+        self.id_login = self.database.selectActive() 
+        if messagebox.askokcancel("Reset account", "Are you sure want to reset your account?"):
+            try:
+                self.cur.execute("DELETE FROM subjects WHERE id_login=?", (self.id_login,))
+                self.cur.execute("DELETE FROM settings WHERE id_login=?", (self.id_login,))
+                self.conn.execute("INSERT INTO settings(id_login, cameraNo, showAnswer, autoSave) VALUES (?,0,1,1)",(self.id_login,))
+            
+                self.conn.commit()
+                messagebox.showinfo("Success","Account has been reset")
+                self.destroy()
+                return True
+            except:
+                self.conn.rollback()
+                return False
 
 
     def on_closing(self):

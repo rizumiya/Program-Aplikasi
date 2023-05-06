@@ -89,7 +89,7 @@ class SignupForm(ctk.CTk):
                         (self.username, self.password))
             self.cursor = self.conn.execute("SELECT login_id FROM logins WHERE username=? and password=?",(self.username, self.password))
             self.id_long = self.cursor.fetchone()
-            self.conn.execute("INSERT INTO settings(id_login, cameraNo, showAnswer, autoSave) VALUES (?,0,1,1)",(self.id_long[0],))
+            self.conn.execute("INSERT INTO settings(id_login, cameraNo, def_subject, showAnswer, autoSave) VALUES (?,0,'No Subject',1,1)",(self.id_long[0],))
             self.conn.commit()
             messagebox.showinfo('Sign Up', 'Account created successfully')
             self.conn.close()
