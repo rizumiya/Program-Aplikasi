@@ -185,7 +185,6 @@ class SubjectPage(ctk.CTk):
             messagebox.showwarning("Error", "No subject selected")
 
 
-
     def updateSubCmd(self):
         messagebox.showwarning("Not available", "This feature is currently unavailable")
 
