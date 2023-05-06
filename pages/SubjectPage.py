@@ -14,7 +14,7 @@ class checkboxWindow(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.title("OMRay | Subject")
-        self.geometry('300x380+1200+90')
+        self.geometry('500x280+1200+90')
         self.resizable(False, False)
         self.iconbitmap('assets/images/OMRay.ico')
 
@@ -23,20 +23,33 @@ class checkboxWindow(ctk.CTkToplevel):
         self.checkbox_values = []
         self.jawaban = str
         global banyakPilihan
+        self.nomorKe = 0
+        self.nomorKe += 1
+
+        # widget
+
+        ctk.CTkLabel(self, text="", width=500, height=120).grid(row=0, column=0, columnspan=banyakPilihan)
+
+        self.heading = ctk.CTkLabel(self, text='Add Answer Key', text_color='#fff', font=('Fugaz One', 36, 'bold'))
+        self.heading.place(x=20, y=10)
+        
+        ctk.CTkLabel(self, text="Question number " + str(self.nomorKe)).place(relx=0.5, y=90, anchor=CENTER)
 
         # perulangan untuk membuat widget checkbox
 
         self.checkbox_vars = [ctk.IntVar() for i in range(banyakPilihan)]
         for i, var in enumerate(self.checkbox_vars):
-            checkbox = ctk.CTkCheckBox(self, text=chr(i+97), variable=var)
-            checkbox.grid(row=0, column=i)
+            ctk.CTkCheckBox(self, text=chr(i+97), variable=var, width=10).grid(row=1, column=i)
 
-        self.checkbox_submit_button = ctk.CTkButton(self, text="Submit", command=self.save_checkbox_values)
-        self.checkbox_submit_button.grid(row=1, column=2)
+        self.checkbox_submit_button = ctk.CTkButton(self, text="Submit", height=35, command=self.save_checkbox_values)
+        self.checkbox_submit_button.place(relx=0.5, y=200, anchor=CENTER)
 
     # function
 
     def save_checkbox_values(self):
+        self.nomorKe += 1
+        ctk.CTkLabel(self, text="Question number " + str(self.nomorKe)).place(relx=0.5, y=90, anchor=CENTER)
+
         for i, var in enumerate(self.checkbox_vars):
             if var.get() == 1:
                 self.checkbox_values.append(i)
@@ -48,7 +61,7 @@ class checkboxWindow(ctk.CTkToplevel):
             self.grab_release()
             self.saveToDatabase()
             self.destroy()
-
+        
 
     def saveToDatabase(self):
         from assets.libs.Database import Database
@@ -139,10 +152,6 @@ class SubjectPage(ctk.CTk):
         self.subEditFrame = ctk.CTkFrame(self.master, width=250, height=220)
         self.subEditFrame.place(x=430, y=100)
 
-        self.saveBtn = ctk.CTkButton(self.master, text="Save", height=35)
-        self.saveBtn.place(x=540, y=335)
-
-
         self.focused = False
         self.protocol("WM_DELETE_WINDOW", self.kembaliKeMenu)
         self.bind("<FocusIn>", self.on_focus_in)
@@ -161,6 +170,9 @@ class SubjectPage(ctk.CTk):
             self.subject_names = ['No Subject'] if len(self.dataSubject) == 0 else [row[0] for row in self.dataSubject]
         else:
             self.subject_names = ['No Subject']
+
+        for widget in self.scrollable_frame.winfo_children():
+            widget.destroy()
 
         for i, row in enumerate(self.subject_names):
             label = ctk.CTkLabel(self.scrollable_frame, text=row)
