@@ -12,6 +12,7 @@ from tkinter import messagebox, font, ttk
 from tkinter import *
 import customtkinter as ctk
 import openpyxl as xl
+import subprocess
 from PIL import Image
 import sqlite3
 import os
@@ -28,6 +29,7 @@ class MainMenu(ctk.CTk):
         self.iconbitmap('assets/images/OMRay.ico')
 
         self.xlPath = "assets/temps/omray.xlsx"
+        self.TempsFold = os.path.join(os.path.dirname(__file__), "assets", "temps")
 
         # creating database
         
@@ -109,7 +111,7 @@ class MainMenu(ctk.CTk):
         self.seerec_button = ctk.CTkButton(self, text="See Record", image=self.img_seerec, compound=TOP, 
                                     fg_color="#fff", hover_color="#B2B2B2", text_color="#333030", 
                                     corner_radius=25, width=200, height=180, cursor='hand2', 
-                                    font=('Fredoka One', 24, 'bold'))
+                                    font=('Fredoka One', 24, 'bold'), command=lambda: self.bukaXplorer(self.TempsFold))
         self.seerec_button.place(x=250, y=410)
 
         # Create a new scan
@@ -255,6 +257,13 @@ class MainMenu(ctk.CTk):
         from assets.libs.scann import newScanning
         newScanning(True, int(self.camNo), 10, 5, ans, ansid)
 
+
+    def bukaXplorer(self, directory):
+        try:
+            subprocess.Popen(f'explorer {directory}', shell=True)
+            return True
+        except:
+            return False
 
 
 if __name__ == '__main__':

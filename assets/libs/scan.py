@@ -1,4 +1,4 @@
-from assets.libs.utils import kotakContour, getCornerPoints, reorder, splitBoxes, showAnswers, stackImages
+from utils import kotakContour, getCornerPoints, reorder, splitBoxes, showAnswers, stackImages
 import numpy as np
 import datetime
 import openpyxl
@@ -185,6 +185,6 @@ def newScanning(questions, choices, ansid, ans, webcamOn, cameraNo, checking):
 
             cv2.waitKey(0)
 
-# newScanning(10, 5, 0, ans, True, 0)
+newScanning(10, 5, 0, ans, True, 0, True)
 
 
