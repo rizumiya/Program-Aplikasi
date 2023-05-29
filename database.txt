@@ -14,7 +14,7 @@ CREATE TABLE settings (
             showAnswer integer, 
             autoSave integer
         );
-INSERT INTO "settings" VALUES(1,1,1,'Matematika (23/5/23)',1,0);
+INSERT INTO "settings" VALUES(1,1,1,'B ing (5/29/2023)',1,1);
 CREATE TABLE subjects (
             sub_id integer primary key autoincrement,
             sub_name text,
@@ -23,9 +23,9 @@ CREATE TABLE subjects (
             sub_answer text,
             id_login integer
         );
-INSERT INTO "subjects" VALUES(1,'Matematika (23/5/23)',10,4,'0, 1, 2, 3, 3, 2, 1, 0, 1, 2',1);
+INSERT INTO "subjects" VALUES(2,'B ing (5/29/2023)',10,4,'0, 1, 2, 3, 2, 1, 0, 1, 2, 3',1);
 DELETE FROM "sqlite_sequence";
 INSERT INTO "sqlite_sequence" VALUES('logins',1);
 INSERT INTO "sqlite_sequence" VALUES('settings',1);
-INSERT INTO "sqlite_sequence" VALUES('subjects',1);
+INSERT INTO "sqlite_sequence" VALUES('subjects',2);
 COMMIT;
