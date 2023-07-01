@@ -103,7 +103,7 @@ class page_subject(ctk.CTk):
         db_subb = dbh.DB_Subject()
         self.selected_sub = self.subject_box.get()
         if messagebox.askokcancel("Delete", f"Are you sure want to delete subject {self.selected_sub}?"):
-            db_subb.deleteSubName(self, self.selected_sub)
+            db_subb.deleteSubName(self.selected_sub)
             messagebox.showinfo("Success", f"Subject {self.selected_sub} successfully deleted")
 
     def updateListSubject(self):
