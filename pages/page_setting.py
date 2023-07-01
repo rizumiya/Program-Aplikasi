@@ -27,6 +27,14 @@ class page_setting(ctk.CTkToplevel):
         # Ambil daftar subject
         db_sub = dbh.DB_Subject()
         self.dataSubject = db_sub.getSubjectASC(self.idLogin)
+        self.sub_exist = db_sub.checkSubjectExists(self.idLogin, self.selectedSub)
+        # cek jika subject ada
+        if not self.sub_exist:
+            # update data setting selectedSub menjadi no subject
+            db_sett = dbh.DB_Setting()
+            db_sett.values=(self.selectedCamera, "No Subject", self.showAnswer, self.autoSave)
+            db_sett.updateSetting(self.idLogin)
+        
         if self.dataSubject is not None:
             self.subject_names = ['No Subject'] if len(self.dataSubject) == 0 else [row[1] for row in self.dataSubject]
         else:
