@@ -84,8 +84,11 @@ class page_subject(ctk.CTk):
         self.editSubBtn = ctk.CTkButton(self.subEditFrame, text="Edit Subject", height=35)
         self.editSubBtn.place(relx=0.5, y=135, anchor=CENTER)
 
+        # Hapus subject
+
         self.deleteSubBtn = ctk.CTkButton(self.subEditFrame, text="Delete Subject", 
-                                          height=35, fg_color="#a13535", hover_color="#a61717")
+                                          height=35, fg_color="#a13535", hover_color="#a61717",
+                                          command=self.del_sub_btn)
         self.deleteSubBtn.place(relx=0.5, y=185, anchor=CENTER)
 
         self.focused = False
@@ -95,6 +98,13 @@ class page_subject(ctk.CTk):
         self.bind("<FocusIn>", self.on_focus_in)
 
     # Function
+
+    def del_sub_btn(self):
+        db_subb = dbh.DB_Subject()
+        self.selected_sub = self.subject_box.get()
+        if messagebox.askokcancel("Delete", f"Are you sure want to delete subject {self.selected_sub}?"):
+            db_subb.deleteSubName(self, self.selected_sub)
+            messagebox.showinfo("Success", f"Subject {self.selected_sub} successfully deleted")
 
     def updateListSubject(self):
         # Ambil daftar subject
