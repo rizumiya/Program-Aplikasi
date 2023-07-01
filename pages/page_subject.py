@@ -99,12 +99,19 @@ class page_subject(ctk.CTk):
 
     # Function
 
+    def change_setting_data(self):
+        db_sett = dbh.DB_Setting()
+        db_sett.values=(self.selectedCamera, "No Subject", self.showAnswer, self.autoSave)
+        db_sett.updateSetting(self.idLogin)
+
+
     def del_sub_btn(self):
         db_subb = dbh.DB_Subject()
         self.selected_sub = self.subject_box.get()
         if messagebox.askokcancel("Delete", f"Are you sure want to delete subject {self.selected_sub}?"):
             db_subb.deleteSubName(self.selected_sub)
             messagebox.showinfo("Success", f"Subject {self.selected_sub} successfully deleted")
+            self.change_setting_data()
 
     def updateListSubject(self):
         # Ambil daftar subject
