@@ -12,8 +12,8 @@ _Current Features_ :
 
 - still under 'construction'
 - no stable version yet
-- multiple user and configuration (database)
-- save scan results to excel
+- multiple users and configurations (database)
+- save scanning results to excel
 
 
 _USAGE_ :
