@@ -61,6 +61,15 @@ class db_helper:
         )
         return rows
 
+    def deleteDataFromTable(self):
+        dbase = db.Database()
+        dbase.delete_data(
+            table_name=self.table_name,
+            condition=self.condition,
+            values=self.values
+        )
+
+
 
 class DB_User(db_helper):
     def __init__(self):
@@ -194,4 +203,7 @@ class DB_Subject(db_helper):
         rows = self.getDataFromTable()
         return rows[0]
 
-
+    def deleteSubName(self, sub_name):
+        self.table_name = self.table_name
+        self.condition = "sub_name=?"
+        self.values = [sub_name]
