@@ -99,11 +99,18 @@ class page_subject(ctk.CTk):
 
     # Function
 
-    def change_setting_data(self):
+    def change_setting_data(self, selected_sub):
         db_sett = dbh.DB_Setting()
-        db_sett.values=(self.selectedCamera, "No Subject", self.showAnswer, self.autoSave)
-        db_sett.updateSetting(self.idLogin)
-
+        self.table_name="settings"
+        self.condition="id_login=?"
+        self.values=[self.id_login]
+        sett_data = db_sett.getDataFromTable()
+        if sett_data[0][3] == selected_sub:
+            db_sett.cameraNo = sett_data[0][2]
+            db_sett.def_sub = "No Subject"
+            db_sett.showAnswer = sett_data[0][4]
+            db_sett.autoSave = sett_data[0][5]
+            db_sett.updateSetting(self.id_login)
 
     def del_sub_btn(self):
         db_subb = dbh.DB_Subject()
@@ -111,7 +118,7 @@ class page_subject(ctk.CTk):
         if messagebox.askokcancel("Delete", f"Are you sure want to delete subject {self.selected_sub}?"):
             db_subb.deleteSubName(self.selected_sub)
             messagebox.showinfo("Success", f"Subject {self.selected_sub} successfully deleted")
-            self.change_setting_data()
+            self.change_setting_data(self.selected_sub)
 
     def updateListSubject(self):
         # Ambil daftar subject
@@ -159,7 +166,7 @@ class page_subject(ctk.CTk):
             return
         else:
             db_sub = dbh.DB_Subject()
-            if db_sub.checkSubjectExists(self.id_login, self.namaSub):
+            if db_sub.checkSubjectExists(self.id_login, self.namaSubject.get()):
                 messagebox.showwarning("Duplicate", "Subject already existed")
             else:
                 self.bykPilgan = int(self.banyakPilgan.get())

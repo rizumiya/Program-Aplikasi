@@ -70,7 +70,6 @@ class db_helper:
         )
 
 
-
 class DB_User(db_helper):
     def __init__(self):
         super().__init__()
@@ -181,6 +180,7 @@ class DB_Subject(db_helper):
         self.condition = "sub.id_login=? AND sub.sub_name=?"
         self.values = [idLogin, sub_name]
         exists = self.getDataFromTable()
+        print(exists)
         if exists:
             return True
         return False
