@@ -207,3 +207,4 @@ class DB_Subject(db_helper):
         self.table_name = self.table_name
         self.condition = "sub_name=?"
         self.values = [sub_name]
+        self.deleteDataFromTable()
