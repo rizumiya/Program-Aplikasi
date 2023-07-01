@@ -1,13 +1,11 @@
-NaughtyImageGrabber (NIGr)
+OMRay
 ======
 
-This tool is basically an image grabber tool. Yep, you heard it right! It's like the upgraded version of your good ol' right click - save image as.<br>
-_The image resolution is **it is what it is**_
-
+OMRay adalah sebuah aplikasi yang berguna untuk mendeteksi jawaban pilihan ganda untuk lembar jawab yang tidak berbasis komputer
 
 _Project's Logs_ :
 
-- [2023/30/06] Upload repository to github
+- [2023/01/07] Upload this repository to github
 
 
 _TO DO_ :
@@ -16,15 +14,10 @@ _TO DO_ :
 - Add NIGr to telegram bot, you can use this at anytime and anywhere
 
 
-_Supported Websites_ :
-- `cosplaytele.com`
-- `telegra.ph`
-
-
 _USAGE_ :
 ~~~
 # clone this repo
-git clone https://github.com/rizumiya/naughty-image-grabber
+git clone https://github.com/rizumiya/Program-Aplikasi
 
 # install requirements
 pip install -r requirements.txt
