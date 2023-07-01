@@ -81,7 +81,8 @@ class page_subject(ctk.CTk):
         self.action_label = ctk.CTkLabel(self.subEditFrame, text="Action : ")
         self.action_label.place(x=20, y=80)
         
-        self.editSubBtn = ctk.CTkButton(self.subEditFrame, text="Edit Subject", height=35)
+        self.editSubBtn = ctk.CTkButton(self.subEditFrame, text="Edit Subject", height=35,
+                                        command=self.edit_sub_btn)
         self.editSubBtn.place(relx=0.5, y=135, anchor=CENTER)
 
         # Hapus subject
@@ -98,6 +99,9 @@ class page_subject(ctk.CTk):
         self.bind("<FocusIn>", self.on_focus_in)
 
     # Function
+
+    def edit_sub_btn(self):
+        messagebox.showwarning("Invalid", f"This function currently not available")
 
     def change_setting_data(self, selected_sub):
         db_sett = dbh.DB_Setting()
