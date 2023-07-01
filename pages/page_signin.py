@@ -2,24 +2,26 @@ import customtkinter as ctk
 from tkinter import messagebox
 from tkinter import *
 from PIL import Image
-import sqlite3
-import os
 
-class LoginForm(ctk.CTk):
+from modules import general_functions as func, db_helper as dbhlp
+from . import page_signup as signup
+import config as cfg
+
+class page_signin(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("OMRay | Sign In")
         self.geometry('925x500+400+200')
         self.resizable(False, False)
-        self.iconbitmap('./assets/images/OMRay.ico')
+        self.iconbitmap('assets/images/OMRay.ico')
 
-        # creating database
+        # Buat Background
 
-        self.SQLPATH = os.path.join(os.path.dirname(__file__), '..', 'assets', 'temps', 'omr.db')
-        self.conn = sqlite3.connect(self.SQLPATH)
-        self.cur = self.conn.cursor()
+        self.imgbg = ctk.CTkImage(light_image=Image.open("assets/images/bg_wall.png"), size=(1000, 650))
+        self.l1=ctk.CTkLabel(master=self, image=self.imgbg, text=None)
+        self.l1.place(x=0, y=0)
 
-        # set tampilan ================================================
+        # Atur tampilan
 
         self.imgSi = ctk.CTkImage(light_image=Image.open("./assets/images/wp.png"), size=(298, 298))
         ctk.CTkLabel(self, image=self.imgSi, bg_color='transparent', text=None).place(x=60, rely=0.2)
@@ -31,7 +33,7 @@ class LoginForm(ctk.CTk):
                         font=('Fugaz One', 28, 'bold'))
         self.heading.place(relx=0.5, y=40, anchor=CENTER)
 
-        # entry ========================================================
+        # Entry
 
         # username --------------------------------------
 
@@ -49,7 +51,7 @@ class LoginForm(ctk.CTk):
 
         self.sign_in = ctk.CTkButton(self.frameSignIn, width=260, height=40, text='Sign In',
                                 bg_color='transparent', corner_radius=6, text_color='white', 
-                                cursor='hand2',font=('Fugaz One', 24), command=self.signInCmd)
+                                cursor='hand2',font=('Fugaz One', 24), command=self.signIn_account)
         self.sign_in.pack()
         self.sign_in.place(relx=0.5, y=230, anchor=CENTER)
 
@@ -59,43 +61,45 @@ class LoginForm(ctk.CTk):
 
         self.sign_up = ctk.CTkButton(self.frameSignIn, width=6, text='Sign Up', border_width=0, 
                                 bg_color='transparent', fg_color="transparent", cursor='hand2', 
-                                text_color='#3B92EA', font=('Fresca', 16, 'bold'), command=self.signUp_cmd)
+                                text_color='#3B92EA', font=('Fresca', 16, 'bold'), command=self.signUp_btn)
         self.sign_up.place(x=221, y=260)
 
-        self.protocol("WM_DELETE_WINDOW", self.on_closing)
-        self.mainloop()
+        self.protocol("WM_DELETE_WINDOW", self.onclosing)
 
-    # function ====================================================
-
-
-    def signInCmd(self):
-        self.username = self.user.get()
-        self.password = self.code.get()
-
-        self.cursor = self.conn.execute(
-            'SELECT * FROM logins WHERE username="%s" and password="%s"' % (self.username, self.password))
-        if self.cursor.fetchone():
-            self.conn.execute(
-                "UPDATE logins SET status = 'on' WHERE username=? and password=?", (self.username, self.password))
-            self.conn.commit()
-            self.conn.close()
-            self.destroy()
-            from MainMenu import MainMenu
-            mainMenu = MainMenu()
-            mainMenu.mainloop()
-        else:
-            messagebox.showerror("Invalid", "invalid username or password")
-
-
-    def signUp_cmd(self):
-        self.conn.close()
-        self.destroy()
-        from pages.SignupForm import SignupForm
-        signup_form = SignupForm()
-        signup_form.mainloop()
-
+    def checkEntryValidity(self, username, password):
+        if len(username) == 0 or len(password) == 0:
+            messagebox.showerror('Invalid', "All fields required!")
+            return False
+        return True
     
-    def on_closing(self):
-        if messagebox.askokcancel("Quit", "Do you want to quit?"):
-            self.conn.close()
-            self.destroy()
+    def signUp_btn(self):
+        self.destroy()
+        sign_up_form = signup.page_signup()
+        sign_up_form.mainloop()
+
+    def signIn_account(self):
+        username = self.user.get()
+        password = self.code.get()
+        if self.checkEntryValidity(username, password):
+            db_helper = dbhlp.db_helper()
+            db_helper.table_name = "logins"
+            db_helper.condition = "username=? AND password=?"
+            db_helper.values = [username, password]
+            if db_helper.checkIfdataExists():
+                # Ubah nilai status dari username dan password menjadi on
+                db_helper.fields = ["status"]
+                db_helper.values = ("on", )
+                db_helper.condition = "username=? and password=?"
+                db_helper.condition_value = (username, password)
+                db_helper.changeValue()
+                # Mengembalikan ke pengecekan awal
+                self.destroy()
+                main_app = cfg.config()
+                main_app
+            else:
+                messagebox.showerror('Invalid', "Incorrect Username or Password!")
+
+    def onclosing(self):
+        funct = func.Functions()
+        funct.on_closing(self)
+    
