@@ -10,7 +10,9 @@ _Project's Logs_ :
 
 _Current Features_ :
 
-- database
+- still under 'construction'
+- no stable version yet
+- multiple user and configuration (database)
 - save scan results to excel
 
 
