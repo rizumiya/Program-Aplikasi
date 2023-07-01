@@ -1,17 +1,17 @@
 OMRay
 ======
 
-OMRay adalah sebuah aplikasi yang berguna untuk mendeteksi jawaban pilihan ganda untuk lembar jawab yang tidak berbasis komputer
+OMRay is an app that helps you detect multiple-choice answers for non-computer-based answer sheets with a user-friendly interface.
 
 _Project's Logs_ :
 
 - [2023/01/07] Upload this repository to github
 
 
-_TO DO_ :
+_Current Features_ :
 
-- Add more supported websites
-- Add NIGr to telegram bot, you can use this at anytime and anywhere
+- database
+- save scan results to excel
 
 
 _USAGE_ :
