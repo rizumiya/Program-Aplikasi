@@ -120,7 +120,8 @@ class Main_Menu(ctk.CTk):
     # Function
 
     def scan_btn(self):
-        scann.scan_module(self.userData[1], self.userData[2])
+        scan = scann.scan_module(self.userData[1], self.userData[2])
+        scan.start_scanning()
 
     def subject_btn(self):
         self.destroy()
