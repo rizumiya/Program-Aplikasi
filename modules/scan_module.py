@@ -41,7 +41,6 @@ class scan_module:
         self.create_threshold()
 
 
-
     # Membuat fungsi untuk update threshold
     def update_threshold(self, value):
         self.threshold_value = value
