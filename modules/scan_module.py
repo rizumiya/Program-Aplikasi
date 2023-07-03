@@ -67,14 +67,13 @@ class scan_module:
 
 
     def start_scanning(self):
-        # self.preprocessing(frame)
 
         while True:
             if self.webcam_on:
                 _, frame = self.cap.read()
             
             cv2.imshow("OMRay | Scanning", frame)
-            print(self.threshold_value)
+            self.preprocessing(frame)
 
             key = cv2.waitKey(1)
 
