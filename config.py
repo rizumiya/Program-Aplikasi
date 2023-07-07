@@ -90,11 +90,6 @@ class config:
         userActive, userData= db_user.checkActiveUser()
         # Ambil data setting
         if userActive:
-            # db_sett = dbh.DB_Setting()
-            # db_sett.username = userData[0][1]
-            # db_sett.password = userData[0][2]
-            # settData = db_sett.getDataSetting()
-
             # Mengirim data user dan settingnya ke main
             mainmenu = main.MainMenu(userData[0])
             mainmenu.mainloop()

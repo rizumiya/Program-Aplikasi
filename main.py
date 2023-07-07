@@ -119,10 +119,17 @@ class MainMenu(ctk.CTk):
         ctk.CTkFrame(self.scrollable_frame, width=740, height=2,
                     fg_color='#fff').pack(padx=5, pady=10)
 
-        self.tree = self.loadExcel()
         self.protocol("WM_DELETE_WINDOW", self.onclosing)
 
+        self.after(100, self.update_tree)
+        self.mainloop()
+
     # Function
+
+    def update_tree(self):
+        print("a")
+        if self.winfo_viewable():
+            self.tree = self.loadExcel()
     
 
     def loadExcel(self):

@@ -25,7 +25,7 @@ class ScanModule:
 
         # variable subject
         self.question = detailSub[2]
-        self.choice = detailSub[3] + 1
+        self.choice = detailSub[3]
         self.ansid = 0
         self.ans = jawaban
         self.box_pilgan = (self.question // 10) 
