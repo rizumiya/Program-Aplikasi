@@ -59,7 +59,7 @@ class PageSubject(ctk.CTk):
         self.banyakSoal.place(x=20, y=70)
         
         self.banyakPilgan = ctk.CTkEntry(self.subBaruFrame, height=32, width=210, 
-                                         text_color='white', placeholder_text='Number of choices', 
+                                         text_color='white', placeholder_text='Number of options', 
                                          bg_color='transparent', font=('Fresca', 16))
         self.banyakPilgan.place(x=20, y=120)
         

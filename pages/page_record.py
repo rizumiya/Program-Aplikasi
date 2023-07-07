@@ -25,6 +25,11 @@ class PageRecord(ctk.CTk):
                                     width=190, values='les go') # kurang values
         self.subject_box.place(x=20, y=20)
 
+        self.clsrmEnt = ctk.CTkEntry(self.recBaruFrame, height=32, width=210, 
+                                    text_color='white', placeholder_text='Classroom', 
+                                    bg_color='transparent', font=('Fresca', 16))
+        self.clsrmEnt.place(x=20, y=70)
+
 
 app = PageRecord()
 app.mainloop()
