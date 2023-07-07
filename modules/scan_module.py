@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from datetime import datetime
 
-from . import general_functions as func, utils
+from . import general_functions as func
 
 
 class scan_module:
