@@ -14,8 +14,11 @@ class Functions:
         self.jawaban = sub_data[4]
 
         if self.jawaban:
-            self.jawaban_array = self.jawaban.split(",")
-            return sub_data, self.jawaban_array
+            # Menguraikan string menjadi list yang valid
+            jawaban_list = self.jawaban.split(', ')
+            jawaban_list = [int(elem) for elem in jawaban_list]
+            jawaban_sublist = [jawaban_list[i:i+10] for i in range(0, len(jawaban_list), 10)]
+            return sub_data, jawaban_sublist
         else:
             print("Data kunci jawaban tidak ditemukan")
             return None, None
