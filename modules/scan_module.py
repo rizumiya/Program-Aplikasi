@@ -257,7 +257,8 @@ class scan_module:
 
                 if self.show_answer:
                     invMatrix = cv2.getPerspectiveTransform(self.ttk2, self.ttk1)
-                    imgInWarp = cv2.warpPerspective(imgWarpMentah, invMatrix,(self.widthImg, self.heightImg))
+                    imgInWarp = cv2.warpPerspective(imgWarpMentah, invMatrix,
+                                                    (self.widthImg, self.heightImg))
 
                     self.imgFinal = cv2.addWeighted(self.imgFinal, 1, imgInWarp, 1, 0)
                     
