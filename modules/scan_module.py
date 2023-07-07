@@ -275,8 +275,3 @@ class scan_module:
 
         self.cap.release()
         cv2.destroyAllWindows()
-
-
-
-    
-        
