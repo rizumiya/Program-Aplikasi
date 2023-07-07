@@ -285,7 +285,8 @@ class ScanModule:
 
             # Menghentikan program jika tombol 'q' ditekan
             if cv2.waitKey(1) & 0xFF == ord('q'):
-                self.save_to_excel()
+                if self.autoSave:
+                    self.save_to_excel()
                 break
 
         self.cap.release()

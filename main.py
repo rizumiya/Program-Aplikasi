@@ -1,12 +1,15 @@
+import os
+import openpyxl as xl
+import customtkinter as ctk
+
 from tkinter import messagebox, font, ttk
 from tkinter import *
 from PIL import Image, ImageTk
-import customtkinter as ctk
 from typing import List
 
+import config as cfg
 from modules import general_functions as func, db_helper as dbh, scan_module as scann
 from pages import page_signin as signin, page_setting as sett, page_subject as subb
-import config as cfg
 
 
 class MainMenu(ctk.CTk):
@@ -20,6 +23,7 @@ class MainMenu(ctk.CTk):
         # Deklarasi variable
         self.userData: List[str] = userData
         self.funct = func.Functions()
+        self.xlPath = "assets/datas/omray.xlsx"
 
         settData = self.funct.getSettingData(userData[1], userData[2])
         self.settData: List[str] = settData
@@ -115,9 +119,70 @@ class MainMenu(ctk.CTk):
         ctk.CTkFrame(self.scrollable_frame, width=740, height=2,
                     fg_color='#fff').pack(padx=5, pady=10)
 
+        self.tree = self.loadExcel()
         self.protocol("WM_DELETE_WINDOW", self.onclosing)
 
     # Function
+    
+
+    def loadExcel(self):
+        if not os.path.exists(self.xlPath):
+            self.workbook = xl.Workbook()
+
+            self.sheet0 = self.workbook.active
+            self.sheet0.title = "Scanning history"
+            self.heading0 = ["Date/time", "Subject", "Classroom"]
+            self.sheet0.append(self.heading0)
+
+            self.workbook1 = self.workbook.create_sheet("Sheet_A")
+            self.sheet1 = self.workbook1
+
+            self.sheet1.title = "Scanning result"
+            self.heading1 = ["Date/time", "Subject", "Classroom",
+                        "Student ID", "Grade", "Wrong Answer"]
+            self.sheet1.append(self.heading1)
+            self.workbook.save(self.xlPath)
+        
+        self.workbook = xl.load_workbook(self.xlPath)
+        self.sheet = self.workbook.active
+        self.list_data = list(self.sheet.values)
+        self.cols = self.list_data[0]
+
+        self.tree = ttk.Treeview(self.scrollable_frame, columns=self.cols, show="headings", height=27)
+        for self.col_name in self.cols:
+            self.tree.heading(self.col_name, text=self.col_name)
+            self.tree.column(self.col_name, width=font.Font().measure(self.col_name))
+        self.tree.pack(expand=True, fill="both")
+
+        for self.value_data in self.list_data[1:]:
+            self.tree.insert('', 'end', values=self.value_data)
+        return self.tree
+
+
+    def update_treeview(self):
+        self.workbook = xl.load_workbook(self.xlPath)
+        
+        self.workbook._active_sheet_index = 0
+        self.sheet = self.workbook.active
+        self.list_data = list(self.sheet.values)
+        self.cols = self.list_data[0]
+        self.tree.delete(*self.tree.get_children())
+        self.tree.config(columns=self.cols)
+
+        for col_name in self.cols:
+            self.tree.heading(col_name, text=col_name)
+            self.tree.column(col_name, width=font.Font().measure(col_name))
+
+        for value_data in self.list_data[1:]:
+            self.tree.insert("", 'end', values=value_data)
+        self.after(1000, self.update_treeview)
+
+        # end of scrollable frame ==================================
+
+        self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
+        self.update_treeview()
+
 
     def scan_btn(self):
         # try:
