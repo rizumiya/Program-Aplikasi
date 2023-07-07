@@ -242,7 +242,6 @@ class scan_module:
 
                 # Bagi tiap kotak menjadi perkotak
                 boxes = self.splitBoxes(imgTresh)
-                cv2.imshow(f"test{i}", boxes[0])
                 self.ansid = i
 
                 jawaban_benar, penilaian = self.check_answer(boxes)
