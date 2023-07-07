@@ -194,7 +194,7 @@ class PageSubject(ctk.CTk):
         main_app = cfg.config()
         main_app
 
-# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
+# = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 
 class CheckBoxWindow(ctk.CTkToplevel):
     def __init__(self, id_login, bykPilgan, bykSoal, namaSub):

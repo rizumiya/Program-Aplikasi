@@ -1,5 +1,6 @@
-from tkinter import messagebox
+from tkinter import messagebox, font
 from modules import db_helper as dbh
+from PIL import ImageFont
 
 class Functions:
     
@@ -39,4 +40,3 @@ class Functions:
         db_sett.password = passw
         settData = db_sett.getDataSetting()
         return settData[0]
-    
