@@ -110,6 +110,6 @@ class PageSignUp(ctk.CTk):
 
     def signIn_btn(self):
         self.destroy()
-        sign_in_form = signin.page_signin()
+        sign_in_form = signin.PageSignIn()
         sign_in_form.mainloop()
 

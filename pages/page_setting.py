@@ -140,6 +140,7 @@ class PageSetting(ctk.CTkToplevel):
         self.save_button = ctk.CTkButton(self, text="Save", height=35, command=self.save_setting_btn)
         self.save_button.place(x=540, y=330)
 
+        self.after(100, self.lift)
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     # Function

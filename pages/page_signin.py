@@ -74,7 +74,7 @@ class PageSignIn(ctk.CTk):
     
     def signUp_btn(self):
         self.destroy()
-        sign_up_form = signup.page_signup()
+        sign_up_form = signup.PageSignUp()
         sign_up_form.mainloop()
 
     def signIn_account(self):

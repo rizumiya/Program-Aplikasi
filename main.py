@@ -1,4 +1,5 @@
 import os
+import time
 import openpyxl as xl
 import customtkinter as ctk
 
@@ -119,18 +120,13 @@ class MainMenu(ctk.CTk):
         ctk.CTkFrame(self.scrollable_frame, width=740, height=2,
                     fg_color='#fff').pack(padx=5, pady=10)
 
+        self.tree = self.loadExcel()
+        self.update_treeview()
+
         self.protocol("WM_DELETE_WINDOW", self.onclosing)
 
-        self.after(100, self.update_tree)
-        self.mainloop()
 
     # Function
-
-    def update_tree(self):
-        print("a")
-        if self.winfo_viewable():
-            self.tree = self.loadExcel()
-    
 
     def loadExcel(self):
         if not os.path.exists(self.xlPath):
@@ -182,13 +178,7 @@ class MainMenu(ctk.CTk):
 
         for value_data in self.list_data[1:]:
             self.tree.insert("", 'end', values=value_data)
-        self.after(1000, self.update_treeview)
-
-        # end of scrollable frame ==================================
-
-        self.protocol("WM_DELETE_WINDOW", self.on_closing)
-
-        self.update_treeview()
+        self.after(100, self.update_treeview)
 
 
     def scan_btn(self):
