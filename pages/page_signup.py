@@ -7,7 +7,7 @@ from modules import general_functions as func, db_helper as dbhlp
 from . import page_signin as signin
 
 
-class page_signup(ctk.CTk):
+class PageSignUp(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("OMRay | Sign Up")

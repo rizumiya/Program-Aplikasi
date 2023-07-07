@@ -5,7 +5,7 @@ from tkinter import *
 from modules import db_helper as dbh, general_functions as func
 
 
-class page_setting(ctk.CTkToplevel):
+class PageSetting(ctk.CTkToplevel):
     def __init__(self, parent, title, user, passw):
         super().__init__(parent)
         self.title(title)

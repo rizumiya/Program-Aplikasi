@@ -3,7 +3,7 @@ import openpyxl as xl
 import tkinter as tk
 import os
 
-from modules import db_helper as dbh, scan_module as scan, database
+from modules import db_helper as dbh, database
 from pages import page_signup as signup, page_signin as signin
 import main as main
 
@@ -96,7 +96,7 @@ class config:
             # settData = db_sett.getDataSetting()
 
             # Mengirim data user dan settingnya ke main
-            mainmenu = main.Main_Menu(userData[0])
+            mainmenu = main.MainMenu(userData[0])
             mainmenu.mainloop()
         else:
             self.checkDataUser()
@@ -110,11 +110,11 @@ class config:
         
         if dataExists:
             print("Buka Sign In")
-            sign_in_form = signin.page_signin()
+            sign_in_form = signin.PageSignIn()
             sign_in_form.mainloop()
         else:
             print("Buka Sign Up")
-            sign_up_form = signup.page_signup()
+            sign_up_form = signup.PageSignUp()
             sign_up_form.mainloop()
 
 

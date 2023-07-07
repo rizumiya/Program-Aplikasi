@@ -9,7 +9,7 @@ from pages import page_signin as signin, page_setting as sett, page_subject as s
 import config as cfg
 
 
-class Main_Menu(ctk.CTk):
+class MainMenu(ctk.CTk):
     def __init__(self, userData):
         super().__init__()
         self.title('OMRay')
@@ -125,19 +125,19 @@ class Main_Menu(ctk.CTk):
             setting = self.funct.getSettingData(self.userData[1], self.userData[2])
             _, _ = self.funct.ambilJawaban(setting[3])
 
-            scan = scann.scan_module(self.userData[1], self.userData[2])
+            scan = scann.ScanModule(self.userData[1], self.userData[2])
             scan.start_scanning()
         except:
             messagebox.showerror('Invalid', 'No default subject selected')
 
     def subject_btn(self):
         self.destroy()
-        page_subb = subb.page_subject(self.userData[0])
+        page_subb = subb.PageSubject(self.userData[0])
         page_subb.mainloop()
 
     def setting_btn(self):
         if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.toplevel_window = sett.page_setting(self, 'OMRay | Setting', self.userData[1], self.userData[2])
+            self.toplevel_window = sett.PageSetting(self, 'OMRay | Setting', self.userData[1], self.userData[2])
         else:
             self.toplevel_window.focus()
 
@@ -157,7 +157,7 @@ class Main_Menu(ctk.CTk):
         if messagebox.askokcancel("Log Out", "Do you want to log out your account?"):
             self.destroy()
             self.logout_account(username, password)
-            sign_in_form = signin.page_signin()
+            sign_in_form = signin.PageSignIn()
             sign_in_form.mainloop()
 
     def onclosing(self):

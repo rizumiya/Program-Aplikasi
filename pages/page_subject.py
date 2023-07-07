@@ -7,7 +7,7 @@ from modules import db_helper as dbh, general_functions as func
 import config as cfg
 
 
-class page_subject(ctk.CTk):
+class PageSubject(ctk.CTk):
     def __init__(self, id_login):
         super().__init__()
         self.title("OMRay | Subject")
@@ -184,7 +184,7 @@ class page_subject(ctk.CTk):
             messagebox.showerror("Error", "Number of questions not set")
             return
         elif self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.toplevel_window = checkBoxWindow(self.id_login, self.bykPilgan, self.bykSoal, self.namaSub)
+            self.toplevel_window = CheckBoxWindow(self.id_login, self.bykPilgan, self.bykSoal, self.namaSub)
         else:
             self.toplevel_window.focus()
 
@@ -196,7 +196,7 @@ class page_subject(ctk.CTk):
 
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
-class checkBoxWindow(ctk.CTkToplevel):
+class CheckBoxWindow(ctk.CTkToplevel):
     def __init__(self, id_login, bykPilgan, bykSoal, namaSub):
         super().__init__()
         self.title("OMRay | Subject")

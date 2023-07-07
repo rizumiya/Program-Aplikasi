@@ -5,7 +5,7 @@ from datetime import datetime
 from . import general_functions as func
 
 
-class scan_module:
+class ScanModule:
     def __init__(self, userp, passw):
 
         # ambil data setting dan subject
@@ -29,7 +29,7 @@ class scan_module:
         self.ans = jawaban
         self.box_pilgan = (self.question // 10) 
 
-        self.webcam_on = True
+        self.webcam_on = False
         self.imgPath = "p.jpg"
         now = datetime.now()
         self.waktu = now.strftime("%Y-%m-%d %H:%M")

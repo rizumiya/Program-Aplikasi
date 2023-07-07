@@ -7,7 +7,7 @@ from modules import general_functions as func, db_helper as dbhlp
 from . import page_signup as signup
 import config as cfg
 
-class page_signin(ctk.CTk):
+class PageSignIn(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("OMRay | Sign In")
