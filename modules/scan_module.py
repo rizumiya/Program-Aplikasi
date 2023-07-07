@@ -1,4 +1,5 @@
 import cv2
+import openpyxl
 import numpy as np
 from datetime import datetime
 
@@ -28,6 +29,7 @@ class ScanModule:
         self.ansid = 0
         self.ans = jawaban
         self.box_pilgan = (self.question // 10) 
+        self.classroom = None
 
         self.webcam_on = False
         self.imgPath = "p.jpg"
@@ -214,6 +216,18 @@ class ScanModule:
         return jawab_benar, penilaian
 
 
+    def save_to_excel(self):
+        xlPath = "assets/datas/omray.xlsx"
+        if not self.classroom:
+            classroom = "General"
+        # menyimpan data ke sheet 1
+        workbook0 = openpyxl.load_workbook(xlPath)
+        workbook0._active_sheet_index = 0
+        sheet0 = workbook0.active
+        sheet0.append([self.waktu, self.selectedSub, classroom])
+        workbook0.save(xlPath)
+
+
     def start_scanning(self):
         while True:
             if self.webcam_on:
@@ -271,6 +285,7 @@ class ScanModule:
 
             # Menghentikan program jika tombol 'q' ditekan
             if cv2.waitKey(1) & 0xFF == ord('q'):
+                self.save_to_excel()
                 break
 
         self.cap.release()
