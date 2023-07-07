@@ -249,7 +249,7 @@ class checkBoxWindow(ctk.CTkToplevel):
             # Process the selected checkboxes
             for i, var in enumerate(self.checkbox_vars):
                 if var.get() == 1:
-                    self.checkbox_values.append(i)
+                    self.checkbox_values.append(i + 1)
 
         for var in self.checkbox_vars:
             var.set(0)
