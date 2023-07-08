@@ -10,7 +10,7 @@ from typing import List
 
 import config as cfg
 from modules import general_functions as func, db_helper as dbh, scan_module as scann
-from pages import page_signin as signin, page_setting as sett, page_subject as subb
+from pages import page_signin as signin, page_setting as sett, page_subject as subb, page_record as recc
 
 
 class MainMenu(ctk.CTk):
@@ -75,7 +75,7 @@ class MainMenu(ctk.CTk):
         self.addrec_button = ctk.CTkButton(self, text="Record", image=self.img_addrec, compound=TOP, 
                                     fg_color="#fff", hover_color="#B2B2B2", text_color="#333030", 
                                     corner_radius=25, width=200, height=180, cursor='hand2', 
-                                    font=('Fredoka One', 24, 'bold'))
+                                    font=('Fredoka One', 24, 'bold'), command=self.record_btn)
         self.addrec_button.place(x=250, y=210)
 
         # setting
@@ -88,7 +88,7 @@ class MainMenu(ctk.CTk):
                                     font=('Fredoka One', 24, 'bold'), command=self.setting_btn)
         self.sett_button.place(x=30, y=410)
 
-        # see record
+        # add new record
         self.img_seerec = ctk.CTkImage(light_image=Image.open(
             "assets/images/see_exc.png"), size=(85, 85))
 
@@ -180,7 +180,6 @@ class MainMenu(ctk.CTk):
             self.tree.insert("", 'end', values=value_data)
         self.after(100, self.update_treeview)
 
-
     def scan_btn(self):
         # try:
             self.funct = func.Functions()
@@ -196,6 +195,11 @@ class MainMenu(ctk.CTk):
         self.destroy()
         page_subb = subb.PageSubject(self.userData[0])
         page_subb.mainloop()
+
+    def record_btn(self):
+        self.destroy()
+        page_recc = recc.PageRecord()
+        page_recc.mainloop()
 
     def setting_btn(self):
         if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
