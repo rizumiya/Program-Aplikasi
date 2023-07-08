@@ -11,7 +11,7 @@ class ScanModule:
         # Mengisi variable utama
 
         # variab
-        self.camera_number = 1
+        self.camera_number = 0
         self.show_answer = True
         self.autoSave = False
 
@@ -27,18 +27,40 @@ class ScanModule:
         self.box_pilgan = self.question // self.queperbox + (self.question % self.queperbox > 0)
         self.classroom = None
 
-        self.webcam_on = False
-        self.imgPath = "p1.jpg"
+        self.webcam_on = True
+        self.imgPath = "p.jpg"
         now = datetime.now()
         self.waktu = now.strftime("%Y-%m-%d %H:%M")
         self.widthImg = 600
         self.heightImg = 800
         self.kernel = np.ones((5, 5), np.uint8)
 
+        self.rotate = 0
+        self.is_pressed = False
+        self.previous = False
+        self.current  = False
+
         # Inisialisasi video webcam
         self.cap = cv2.VideoCapture(self.camera_number)
         self.threshold_value = 95
         self.create_threshold()
+
+
+    def rotate_img(self, frame):
+        self.current = self.is_pressed
+        if (self.previous is False) and (self.current is True): 
+            self.rotate = (self.rotate + 90) % 360
+            print(self.rotate)
+        self.previous = self.current
+
+        if self.rotate == 90:
+            frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+        elif self.rotate == 180:
+            frame = cv2.rotate(frame, cv2.ROTATE_180)
+        elif self.rotate == 270:
+            frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
+        
+        return frame
 
 
     # Membuat fungsi untuk update threshold
@@ -94,7 +116,7 @@ class ScanModule:
         for contour in contours:
             perimeter = cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, 0.02 * perimeter, True)
-            if len(approx) == 4 and cv2.contourArea(approx) > 30000:
+            if len(approx) == 4 and cv2.contourArea(approx) > 20000:
                 valid_contours.append(approx)
         
         valid_contours = valid_contours[:4]
@@ -245,7 +267,12 @@ class ScanModule:
             else:
                 frame = cv2.imread(self.imgPath)
 
+            frame = self.rotate_img(frame)
+            
             frame, valid_contours = self.preprocessing(frame)
+
+            self.is_pressed = (cv2.waitKey(1) == ord('r'))
+
             imgCopy = frame.copy()
 
             total_score = 0
@@ -272,10 +299,7 @@ class ScanModule:
                 #     cv2.imshow(f"Box {i+1}", box)
 
                 jawaban_benar, penilaian = self.check_answer(boxes)
-                cv2.putText(imgCopy, str(jawaban_benar), (x, y-10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
                 
-                cv2.imshow("img copy", imgCopy)
                 jwb_benar += jawaban_benar
 
                 imgWarpMentah = np.zeros_like(warped)
@@ -283,6 +307,8 @@ class ScanModule:
                 self.show_answers(imgWarpMentah, self.jawabanIndex, penilaian, self.ans, self.queperbox, self.choice, self.ansid)
 
                 if self.show_answer:
+                    cv2.putText(self.imgFinal, str(jawaban_benar), (x, y-10),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
                     invMatrix = cv2.getPerspectiveTransform(self.ttk2, self.ttk1)
                     imgInWarp = cv2.warpPerspective(imgWarpMentah, invMatrix,
                                                     (self.widthImg, self.heightImg))
@@ -302,6 +328,7 @@ class ScanModule:
                 if self.autoSave:
                     self.save_to_excel()
                 break
+            
 
         self.cap.release()
         cv2.destroyAllWindows()

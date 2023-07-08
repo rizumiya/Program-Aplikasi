@@ -124,14 +124,18 @@ class PageRecord(ctk.CTk):
         self.help1_lbl = ctk.CTkLabel(self.howtoFrame, text="Shorcut keys",
                                       font=('Fresca', 18))
         self.help1_lbl.place(x=20, y=20)
+
+        self.help2_lbl = ctk.CTkLabel(self.howtoFrame, text="[r] to rotate camera",
+                                      font=('Fresca', 17))
+        self.help2_lbl.place(x=20, y=50)
         
         self.help2_lbl = ctk.CTkLabel(self.howtoFrame, text="[s] to skip student",
                                       font=('Fresca', 17))
-        self.help2_lbl.place(x=20, y=60)
+        self.help2_lbl.place(x=20, y=80)
         
         self.help3_lbl = ctk.CTkLabel(self.howtoFrame, text="[q] to quit scanning",
                                       font=('Fresca', 17))
-        self.help3_lbl.place(x=20, y=100)
+        self.help3_lbl.place(x=20, y=110)
         
         self.help4_lbl = ctk.CTkLabel(self.howtoFrame, text="[enter] to save result and\ngo to the next student",
                                       font=('Fresca', 17))
