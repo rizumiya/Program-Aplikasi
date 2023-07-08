@@ -161,7 +161,6 @@ class MainMenu(ctk.CTk):
             self.tree.insert('', 'end', values=self.value_data)
         return self.tree
 
-
     def update_treeview(self):
         self.workbook = xl.load_workbook(self.xlPath)
         
