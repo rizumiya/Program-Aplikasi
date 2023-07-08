@@ -25,10 +25,11 @@ class ScanModule:
 
         # variable subject
         self.question = detailSub[2]
+        self.queperbox = 10 # option per box
         self.choice = detailSub[3]
         self.ansid = 0
         self.ans = jawaban
-        self.box_pilgan = (self.question // 10) 
+        self.box_pilgan = self.question // self.queperbox + (self.question % self.queperbox > 0)
         self.classroom = None
 
         self.webcam_on = False
@@ -63,13 +64,24 @@ class ScanModule:
         self.threshold_value = value
     
 
-    def splitBoxes(self, img):
-        rows = np.vsplit(img, 10)
+    def splitBoxes(self, frame, min_width=20, min_height=20):
+        height, width = frame.shape
+        cell_width = max(width // self.choice, min_width)
+        cell_height = max(height // self.queperbox, min_height)
+
         boxes = []
-        for r in rows:
-            cols = np.hsplit(r, 5)
-            for box in cols:
-                boxes.append(box)
+        for r in range(self.queperbox):
+            for c in range(self.choice):
+                try:
+                    x = c * cell_width
+                    y = r * cell_height
+                    cell = frame[y:y+cell_height, x:x+cell_width]
+                    boxes.append(cell)
+                except:
+                    # Mengatasi error jika ukuran tidak sama rata
+                    cell = frame[r*cell_height:(r+1)*cell_height, c*cell_width:(c+1)*cell_width]
+                    boxes.append(cell)
+
         return boxes
 
 
@@ -86,7 +98,7 @@ class ScanModule:
         for contour in contours:
             perimeter = cv2.arcLength(contour, True)
             approx = cv2.approxPolyDP(contour, 0.02 * perimeter, True)
-            if len(approx) == 4 and cv2.contourArea(approx) > 5000:
+            if len(approx) == 4 and cv2.contourArea(approx) > 10000:
                 valid_contours.append(approx)
         
         valid_contours = valid_contours[:4]
@@ -171,7 +183,7 @@ class ScanModule:
 
 
     def get_student_answer(self, boxes):
-        jawabanPixelVal = np.zeros((10, self.choice))
+        jawabanPixelVal = np.zeros((self.queperbox, self.choice))
         hitC = 0
         hitR = 0
 
@@ -196,7 +208,7 @@ class ScanModule:
         jawabanPixelVal = self.get_student_answer(boxes)
 
         self.jawabanIndex = []
-        for x in range(0, 10):
+        for x in range(0, self.queperbox):
             arr = jawabanPixelVal[x]
             nilaiJawabanIndex = np.where(arr == np.amax(arr))
             self.jawabanIndex.append(nilaiJawabanIndex[0][0])
@@ -204,8 +216,10 @@ class ScanModule:
         # Evaluate the answers
         penilaian = []
         salah = []
-        for x in range(0, 10):
-            if self.ans[self.ansid][x] == self.jawabanIndex[x]:
+        for x in range(0, self.queperbox):
+            if self.ans[self.ansid][x] == 0:
+                self.jawabanIndex[x] = 0
+            if self.ans[self.ansid][x] != 0 and self.ans[self.ansid][x] == self.jawabanIndex[x]:
                 penilaian.append(1)
             else:
                 penilaian.append(0)
@@ -219,7 +233,7 @@ class ScanModule:
     def save_to_excel(self):
         xlPath = "assets/datas/omray.xlsx"
         if not self.classroom:
-            classroom = "General"
+            classroom = "Regular"
         # menyimpan data ke sheet 1
         workbook0 = openpyxl.load_workbook(xlPath)
         workbook0._active_sheet_index = 0
@@ -262,11 +276,12 @@ class ScanModule:
                 cv2.putText(imgCopy, str(jawaban_benar), (x, y-10),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
                 
+                # cv2.imshow("img copy", imgCopy)
                 jwb_benar += jawaban_benar
 
                 imgWarpMentah = np.zeros_like(warped)
 
-                self.show_answers(imgWarpMentah, self.jawabanIndex, penilaian, self.ans, 10, self.choice, self.ansid)
+                self.show_answers(imgWarpMentah, self.jawabanIndex, penilaian, self.ans, self.queperbox, self.choice, self.ansid)
 
                 if self.show_answer:
                     invMatrix = cv2.getPerspectiveTransform(self.ttk2, self.ttk1)
@@ -291,3 +306,7 @@ class ScanModule:
 
         self.cap.release()
         cv2.destroyAllWindows()
+
+
+# app = ScanModule()
+# app.start_scanning()

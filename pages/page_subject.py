@@ -184,7 +184,7 @@ class PageSubject(ctk.CTk):
             messagebox.showerror("Error", "Number of questions not set")
             return
         elif self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.toplevel_window = CheckBoxWindow(self.id_login, self.bykPilgan+1, self.bykSoal, self.namaSub)
+            self.toplevel_window = CheckBoxWindow(self.id_login, self.bykPilgan, self.bykSoal, self.namaSub)
         else:
             self.toplevel_window.focus()
 
@@ -270,7 +270,7 @@ class CheckBoxWindow(ctk.CTkToplevel):
             self.id_login, 
             self.namaSub, 
             self.banyakSoal, 
-            self.banyakPilihan, 
+            self.banyakPilihan + 1, 
             self.jawaban
         )
 
