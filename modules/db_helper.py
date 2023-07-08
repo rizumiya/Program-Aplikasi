@@ -185,13 +185,13 @@ class DB_Subject(db_helper):
             return True
         return False
     
-    def addSubject(self, idLogin, sub_name, bykSoal, bykPilgan, jawaban):
+    def addSubject(self, idLogin, sub_name, bykSoal, bykSoalBox, bykPilgan, jawaban):
         dbase = db.Database()
         if not self.checkSubjectExists(idLogin, sub_name):
             dbase.create_data(
                 table_name="subjects", 
-                fields=["sub_name", "sub_totalQuestion", "sub_choices", "sub_answer", "id_login"],
-                values=[sub_name, bykSoal, bykPilgan, jawaban, idLogin]
+                fields=["sub_name", "sub_totalQuestion", "sub_quePerBox", "sub_choices", "sub_answer", "id_login"],
+                values=[sub_name, bykSoal, bykSoalBox, bykPilgan, jawaban, idLogin]
             )
             return True
         return False

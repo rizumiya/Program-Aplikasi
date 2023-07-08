@@ -13,7 +13,7 @@ class ScanModule:
         self.funct = func.Functions()
         setting = self.funct.getSettingData(userp, passw)
         detailSub, jawaban = self.funct.ambilJawaban(setting[3])
-        
+
         # Mengisi variable utama
 
         # variable setting
@@ -25,8 +25,8 @@ class ScanModule:
 
         # variable subject
         self.question = detailSub[2]
-        self.queperbox = 10 # option per box
-        self.choice = detailSub[3]
+        self.queperbox = detailSub[3] # numbers per box
+        self.choice = detailSub[4]
         self.ansid = 0
         self.ans = jawaban
         self.box_pilgan = self.question // self.queperbox + (self.question % self.queperbox > 0)

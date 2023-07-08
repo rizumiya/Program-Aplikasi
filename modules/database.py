@@ -22,6 +22,7 @@ class Database:
             id integer primary key autoincrement,
             sub_name text,
             sub_totalQuestion integer,
+            sub_quePerBox integer,
             sub_choices integer,
             sub_answer text,
             id_login integer

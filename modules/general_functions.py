@@ -12,7 +12,7 @@ class Functions:
     def ambilJawaban(self, sub_name):
         db_subb = dbh.DB_Subject()
         sub_data = db_subb.getDataFromSubName(sub_name)
-        self.jawaban = sub_data[4]
+        self.jawaban = sub_data[5]
 
         if self.jawaban:
             # Menguraikan string menjadi list yang valid
