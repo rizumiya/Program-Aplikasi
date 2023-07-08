@@ -180,15 +180,15 @@ class MainMenu(ctk.CTk):
         self.after(100, self.update_treeview)
 
     def scan_btn(self):
-        # try:
+        try:
             self.funct = func.Functions()
             setting = self.funct.getSettingData(self.userData[1], self.userData[2])
             _, _ = self.funct.ambilJawaban(setting[3])
 
             scan = scann.ScanModule(self.userData[1], self.userData[2])
             scan.start_scanning()
-        # except:
-        #     messagebox.showerror('Invalid', 'No default subject selected')
+        except:
+            messagebox.showerror('Invalid', 'No default subject selected')
 
     def subject_btn(self):
         self.destroy()

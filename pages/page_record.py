@@ -139,7 +139,7 @@ class PageRecord(ctk.CTk):
         
         self.help4_lbl = ctk.CTkLabel(self.howtoFrame, text="[enter] to save result and\ngo to the next student",
                                       font=('Fresca', 17))
-        self.help4_lbl.place(x=20, y=140)
+        self.help4_lbl.place(x=20, y=145)
 
         self.backBtn = ctk.CTkButton(self.master, text="Back", height=35, command=self.onclosing)
         self.backBtn.place(x=20, y=335)

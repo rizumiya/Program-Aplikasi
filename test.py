@@ -60,6 +60,7 @@ class ScanModule:
         elif self.rotate == 270:
             frame = cv2.rotate(frame, cv2.ROTATE_90_COUNTERCLOCKWISE)
         
+        self.is_pressed = False
         return frame
 
 
@@ -271,8 +272,6 @@ class ScanModule:
             
             frame, valid_contours = self.preprocessing(frame)
 
-            self.is_pressed = (cv2.waitKey(1) == ord('r'))
-
             imgCopy = frame.copy()
 
             total_score = 0
@@ -324,11 +323,13 @@ class ScanModule:
             cv2.imshow("OMRay | Scanning", self.imgFinal)
 
             # Menghentikan program jika tombol 'q' ditekan
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            key = cv2.waitKey(10)
+            if key == ord('q'):
                 if self.autoSave:
                     self.save_to_excel()
                 break
-            
+            elif key == ord('r'):
+                self.is_pressed = True
 
         self.cap.release()
         cv2.destroyAllWindows()

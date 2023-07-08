@@ -69,7 +69,7 @@ class PageSubject(ctk.CTk):
                                          bg_color='transparent', font=('Fresca', 16))
         self.bykSoalperbox.place(x=20, y=170)
         
-        self.confirmNew = ctk.CTkButton(self.master, text="Confirm", 
+        self.confirmNew = ctk.CTkButton(self.master, text="Create Subject", 
                                         height=35, command=self.show_checkbox_window)
         self.confirmNew.place(x=540, y=335)
 
