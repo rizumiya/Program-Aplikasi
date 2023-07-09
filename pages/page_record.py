@@ -46,23 +46,18 @@ class PageRecord(ctk.CTk):
         self.scdsubjlbl.place(x=20, y=60)
 
         # question behaviour
-        self.multichoice = ['regular multiple choice', 'complex multiple choice', 'combined']
+        self.multichoice = ['regular multiple choice', 'complex multiple choice']
         self.selected_option = tk.StringVar()
         self.selected_option.set(self.multichoice[0])
         self.multichoice_box = ctk.CTkOptionMenu(master=self.recBaruFrame, width=210,
                                                  values=self.multichoice,
-                                                 variable=self.selected_option,
-                                                 command=self.que_behav_opt)
+                                                 variable=self.selected_option)
         self.multichoice_box.place(x=20, y=90)
-
-        # subject ke 2 jika combined terpilih
-        self.scdsubjlbl = ctk.CTkLabel(self.recBaruFrame, text="Second Subject", 
-                                       state='disabled', font=('Fresca', 16))
-        self.scdsubjlbl.place(x=20, y=130)
-
-        self.second_subject = ctk.CTkOptionMenu(master=self.recBaruFrame, width=210, 
-                                                values=self.subject_names, state='disabled')
-        self.second_subject.place(x=20, y=160)
+        
+        self.show_answer_var = ctk.BooleanVar()
+        self.show_answer_checkbox = ctk.CTkCheckBox(self.recBaruFrame, text='Show Answer', 
+                                                    border_width=2, variable=self.show_answer_var)
+        self.show_answer_checkbox.place(x=20, y=140)
 
         # Midle section
 
@@ -178,19 +173,14 @@ class PageRecord(ctk.CTk):
                                     variable=self.defaultCam)
         self.camera_box.place(x=80, y=10)
 
-        self.show_answer_var = ctk.BooleanVar()
-        self.show_answer_checkbox = ctk.CTkCheckBox(self.bottomframe, text='Show Answer', 
-                                                    border_width=2, variable=self.show_answer_var)
-        self.show_answer_checkbox.place(x=270, y=12)
-
         self.queperbox_lbl = ctk.CTkLabel(self.bottomframe, text="Many rows in one table : ", 
                                            font=('Fresca', 16))
-        self.queperbox_lbl.place(x=415, y=10)
+        self.queperbox_lbl.place(x=270, y=10)
 
         self.queperbox_entry = ctk.CTkEntry(self.bottomframe, height=32, width=100, 
-                                     text_color='white', bg_color='transparent', 
+                                     text_color='white', bg_color='transparent', placeholder_text="Empty = 10", 
                                      font=('Fresca', 16))
-        self.queperbox_entry.place(x=580, y=10)
+        self.queperbox_entry.place(x=430, y=10)
 
         # Button
 
@@ -205,43 +195,48 @@ class PageRecord(ctk.CTk):
 
 
     # Function
+    
+    def ambilCam(self):
+        if self.camera_box.get() == "Default webcam":
+            return 0
+        else : 
+            return 1
+        
 
     def get_all_value(self):
+        if self.queperbox_entry.get() != "" and not self.queperbox_entry.get().isdigit():
+            messagebox.showerror("Error", "Input number of rows must be a number")
+            return
+        
+        if self.totstudEntry.get() != "" and not self.totstudEntry.get().isdigit():
+            messagebox.showerror("Error", "Input total students must be a number")
+            return
+        
         # ambil data subject
         self.subject_1 = self.subject_box.get()
         self.behaviour = self.multichoice_box.get()
-        self.subject_2 = self.second_subject.get() if self.multichoice_box.get() == "combined" else None
-        print(self.subject_1, self.behaviour, self.subject_2)
+        self.cam_no = self.ambilCam()
+        self.show_answer = self.show_answer_checkbox.get()
+        self.queperbox = int(self.queperbox_entry.get()) if self.queperbox_entry.get() != "" else 10
+        print(self.subject_1, self.behaviour, self.cam_no, self.queperbox, self.show_answer)
 
         # ambil data save result
-        if self.totstudEntry.get() != "" and not self.totstudEntry.get().isdigit():
-            messagebox.showerror("Error", "Input must be a number")
-            return
-        
         self.autosave = 1 if self.saveresult_val.get() == 1 else 0
         self.order_sid = self.order_sid_opt.get() if self.student_id.get() == 1 else None
         self.classroom_name = self.clsrmEnt.get() if self.clsrmEnt.get() != "" else None
-        self.total_student = self.totstudEntry.get() if self.totstudEntry.get() != "" else None
+        self.total_student = int(self.totstudEntry.get()) if self.totstudEntry.get() != "" else None
         print(self.autosave, self.order_sid, self.classroom_name, self.total_student)
 
     
     def start_scanning_btn(self):
         self.get_all_value()
-        adv_scan = asm.AdvanceScanModule(self.subject_1, self.behaviour, self.subject_2)
+        adv_scan = asm.AdvanceScanModule(self.subject_1, self.behaviour, self.cam_no, self.queperbox)
         adv_scan.autosave = self.autosave
         adv_scan.order_sid = self.order_sid
         adv_scan.classroom_name = self.classroom_name
         adv_scan.total_student = self.total_student
+        adv_scan.show_answer = self.show_answer
         adv_scan.start_scanning()
-
-
-    def que_behav_opt(self, selected_option):
-        if selected_option == "combined":
-            self.second_subject.configure(state="normal")
-            self.scdsubjlbl.configure(state="normal")
-        else:
-            self.second_subject.configure(state="disabled")
-            self.scdsubjlbl.configure(state="disabled")
 
 
     def result_opt(self):

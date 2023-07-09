@@ -24,6 +24,7 @@ class PageSetting(ctk.CTkToplevel):
         self.selectedSub = setting[3]
         self.showAnswer = setting[4]
         self.autoSave = setting[5]
+        self.queperbox = setting[6]
 
         # Ambil daftar subject
         self.subject_names = self.funct.get_subject(self.idLogin)
@@ -102,7 +103,7 @@ class PageSetting(ctk.CTkToplevel):
         self.queperbox_lbl.place(x=10, y=130)
 
         self.queperbox_entry = ctk.CTkEntry(self.defaultScanScrollableFrame, height=32, width=100, 
-                                     text_color='white', bg_color='transparent',placeholder_text="Empty = 10",
+                                     text_color='white', bg_color='transparent',placeholder_text=f"Empty = {self.queperbox}",
                                      font=('Fresca', 16))
         self.queperbox_entry.place(x=190, y=130)
 
@@ -171,7 +172,7 @@ class PageSetting(ctk.CTkToplevel):
         db_sett.def_sub = self.subject_box.get()
         db_sett.showAnswer = self.show_answer_checkbox.get()
         db_sett.autoSave = self.auto_save_checkbox.get()
-        db_sett.quePerBox = self.queperbox_entry.get() if self.queperbox_entry.get() != "" else 10
+        db_sett.quePerBox = self.queperbox_entry.get() if self.queperbox_entry.get() != "" else self.queperbox
         db_sett.updateSetting(self.idLogin)
         newpas, mesg = self.updatePass()
         messagebox.showinfo('Setting', mesg)

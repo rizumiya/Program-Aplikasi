@@ -7,29 +7,27 @@ from . import general_functions as func
 
 
 class AdvanceScanModule:
-    def __init__(self, subject_1, behaviour, subject_2, cam_no, queperbox):
+    def __init__(self, subject_1, behaviour, cam_no, queperbox):
         # Inisialisasi variable awal
         self.autosave = 0
         self.order_sid = None
         self.classroom_name = "Regular"
         self.total_student = 999
         self.subject_1 = subject_1
-        self.subject_2 = subject_2
         self.behaviour = behaviour
         self.camera_number = cam_no
         self.queperbox = queperbox
+        self.show_answer = False
 
         # Ambil data Subject dari database
         self.funct = func.Functions()
         print("woe ", self.subject_1)
-        detailSub_1, jawaban_1 = self.funct.ambilJawaban(self.subject_1)
-        if self.subject_2 and self.behaviour == "combined":
-            self.detailSub_2, self.jawaban_2 = self.funct.ambilJawaban(self.subject_2)
+        detailSub, jawaban = self.funct.ambilJawaban(self.subject_1)
 
-        self.question = detailSub_1[2]
-        self.choice = detailSub_1[4]
+        self.question = detailSub[2]
+        self.choice = detailSub[3]
         self.ansid = 0
-        self.ans = jawaban_1
+        self.ans = jawaban
         self.box_pilgan = self.question // self.queperbox + (self.question % self.queperbox > 0)
 
         self.webcam_on = False
@@ -91,6 +89,7 @@ class AdvanceScanModule:
 
     def splitBoxes(self, frame, min_width=20, min_height=20):
         height, width = frame.shape
+        print(width, self.choice)
         cell_width = max(width // self.choice, min_width)
         cell_height = max(height // self.queperbox, min_height)
 
