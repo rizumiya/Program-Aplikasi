@@ -25,13 +25,7 @@ class PageSetting(ctk.CTkToplevel):
         self.autoSave = setting[5]
 
         # Ambil daftar subject
-        db_sub = dbh.DB_Subject()
-        self.dataSubject = db_sub.getSubjectASC(self.idLogin)
-        
-        if self.dataSubject is not None:
-            self.subject_names = ['No Subject'] if len(self.dataSubject) == 0 else [row[1] for row in self.dataSubject]
-        else:
-            self.subject_names = ['No Subject']
+        self.subject_names = self.funct.get_subject(self.idLogin)
 
         # Menambahkan judul
 

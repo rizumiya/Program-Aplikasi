@@ -180,7 +180,7 @@ class DB_Subject(db_helper):
         self.condition = "sub.id_login=? AND sub.sub_name=?"
         self.values = [idLogin, sub_name]
         exists = self.getDataFromTable()
-        print(exists)
+        # print(exists)
         if exists:
             return True
         return False

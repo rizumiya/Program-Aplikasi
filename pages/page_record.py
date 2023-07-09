@@ -2,13 +2,23 @@ import tkinter as tk
 import customtkinter as ctk
 import config as cfg
 
+from modules import db_helper as dbh, general_functions as func
+
 class PageRecord(ctk.CTk):
-    def __init__(self):
+    def __init__(self, idlogin):
         super().__init__()
         self.title("OMRay | Add New Record")
         self.geometry('800x385+60+65')
         self.resizable(False, False)
         self.iconbitmap('assets/images/OMRay.ico')
+
+        self.funct = func.Functions()
+        self.id_login = idlogin
+        
+        # Ambil subject
+        self.subject_names = self.funct.get_subject(self.id_login)
+
+        # Heading
 
         self.heading = ctk.CTkLabel(self, text='New Record', text_color='#fff', 
                                     font=('Fugaz One', 36, 'bold'))
@@ -26,7 +36,7 @@ class PageRecord(ctk.CTk):
         self.recBaruFrame.place(x=20, y=100)
 
         # Subject to use
-        self.subject_box = ctk.CTkOptionMenu(master=self.recBaruFrame, width=210, values='les go')  # Kurang values
+        self.subject_box = ctk.CTkOptionMenu(master=self.recBaruFrame, width=210, values=self.subject_names)  # Kurang values
         self.subject_box.place(x=20, y=20)
 
         self.scdsubjlbl = ctk.CTkLabel(self.recBaruFrame, text="Question Behaviour")

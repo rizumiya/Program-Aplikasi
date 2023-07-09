@@ -40,3 +40,14 @@ class Functions:
         db_sett.password = passw
         settData = db_sett.getDataSetting()
         return settData[0]
+
+    def get_subject(self, idlogin):
+        db_sub = dbh.DB_Subject()
+        self.dataSubject = db_sub.getSubjectASC(idlogin)
+        
+        if self.dataSubject is not None:
+            self.subject_names = ['No Subject'] if len(self.dataSubject) == 0 else [row[1] for row in self.dataSubject]
+        else:
+            self.subject_names = ['No Subject']
+        
+        return self.subject_names

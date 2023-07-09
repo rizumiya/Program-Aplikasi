@@ -199,7 +199,7 @@ class MainMenu(ctk.CTk):
 
     def record_btn(self):
         self.destroy()
-        page_recc = recc.PageRecord()
+        page_recc = recc.PageRecord(self.userData[0])
         page_recc.mainloop()
 
     def see_record_btn(self):
