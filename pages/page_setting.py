@@ -137,7 +137,7 @@ class PageSetting(ctk.CTkToplevel):
 
         self.reset_button = ctk.CTkButton(self.accountScanScrollableFrame, text="Reset account", 
                                           width=130, height=35, fg_color="#a13535", 
-                                          hover_color="#a61717")
+                                          hover_color="#a61717", command=self.resetAccount)
         self.reset_button.place(x=10, y=150)
 
         self.delete_button = ctk.CTkButton(self.accountScanScrollableFrame, text="Delete account", 
@@ -150,7 +150,7 @@ class PageSetting(ctk.CTkToplevel):
         self.save_button = ctk.CTkButton(self, text="Save", height=35, command=self.save_setting_btn)
         self.save_button.place(x=540, y=330)
 
-        self.after(100, self.lift)
+        self.after(200, self.lift)
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
 
     # Function
@@ -180,6 +180,24 @@ class PageSetting(ctk.CTkToplevel):
             self.master.destroy()
             cfg.config()
         self.destroy()
+
+    def resetAccount(self):
+        db_user = dbh.DB_User()
+        db_subb = dbh.DB_Subject()
+        db_sett = dbh.DB_Setting()
+
+        _, data_user = db_user.checkActiveUser()
+        if messagebox.askokcancel("Reset account", "Are you sure want to reset your account?"):
+            subjects = db_subb.getSubjectASC(data_user[0][0])
+            for sub in subjects:
+                db_subb.deleteSubName(sub[1])
+            db_sett.deleteSetting(data_user[0][0])
+            db_sett.username = data_user[0][1]
+            db_sett.password = data_user[0][2]
+            db_sett.addSetting()
+
+            messagebox.showinfo("Success","Account has been reset")
+            self.destroy()
 
     def deleteAccount(self):
         db_user = dbh.DB_User()
