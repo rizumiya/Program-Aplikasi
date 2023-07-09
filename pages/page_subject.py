@@ -163,7 +163,6 @@ class PageSubject(ctk.CTk):
         self.banyakSoal.delete(0, 'end')
         self.namaSubject.delete(0, 'end')
         self.banyakPilgan.delete(0, 'end')
-        self.bykSoalperbox.delete(0, 'end')
         self.namaSubject.focus()
     
     def show_checkbox_window(self):
