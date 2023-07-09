@@ -1,0 +1,32 @@
+BEGIN TRANSACTION;
+CREATE TABLE logins (
+            id integer primary key autoincrement,
+            username text,
+            password text,
+            status text
+        );
+INSERT INTO "logins" VALUES(1,'qwe','qwe','on');
+CREATE TABLE settings (
+            id integer primary key autoincrement,
+            id_login integer, 
+            cameraNo integer, 
+            def_subject text, 
+            showAnswer integer, 
+            autoSave integer
+        );
+INSERT INTO "settings" VALUES(1,1,1,'prakarya',1,0);
+CREATE TABLE subjects (
+            id integer primary key autoincrement,
+            sub_name text,
+            sub_totalQuestion integer,
+            sub_quePerBox integer,
+            sub_choices integer,
+            sub_answer text,
+            id_login integer
+        );
+INSERT INTO "subjects" VALUES(1,'prakarya',20,10,5,'2, 3, 1, 2, 3, 2, 2, 3, 1, 3, 1, 2, 2, 2, 3, 2, 1, 1, 1, 4',1);
+DELETE FROM "sqlite_sequence";
+INSERT INTO "sqlite_sequence" VALUES('logins',1);
+INSERT INTO "sqlite_sequence" VALUES('settings',1);
+INSERT INTO "sqlite_sequence" VALUES('subjects',1);
+COMMIT;

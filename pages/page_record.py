@@ -9,7 +9,7 @@ class PageRecord(ctk.CTk):
     def __init__(self, idlogin):
         super().__init__()
         self.title("OMRay | Add New Record")
-        self.geometry('800x445+60+65')
+        self.geometry('800x450+60+65')
         self.resizable(False, False)
         self.iconbitmap('assets/images/OMRay.ico')
 
@@ -109,7 +109,7 @@ class PageRecord(ctk.CTk):
 
         self.totstudEntry = ctk.CTkEntry(self.resultFrame, height=32, width=100, 
                                      text_color='white', state='disabled',
-                                     bg_color='transparent')
+                                     bg_color='transparent', font=('Fresca', 16))
         self.totstudEntry.place(x=140, y=90)
 
         self.ordersidlbl = ctk.CTkLabel(self.resultFrame, 
@@ -158,7 +158,7 @@ class PageRecord(ctk.CTk):
 
         # Bottom section
 
-        self.bottomframe = ctk.CTkFrame(self.master, width=800, height= 50)
+        self.bottomframe = ctk.CTkFrame(self.master, width=800, height= 52)
         self.bottomframe.place(x=20, y=340)
 
         self.camera_label = ctk.CTkLabel(self.bottomframe, text="Camera : ", font=('Fresca', 16))
@@ -179,19 +179,27 @@ class PageRecord(ctk.CTk):
         self.camera_box.place(x=80, y=10)
 
         self.show_answer_var = ctk.BooleanVar()
-        self.show_answer_checkbox = ctk.CTkCheckBox(self.bottomframe, text='Show Answer',
-                                                    variable=self.show_answer_var)
-        self.show_answer_checkbox.place(x=240, y=10)
+        self.show_answer_checkbox = ctk.CTkCheckBox(self.bottomframe, text='Show Answer', 
+                                                    border_width=2, variable=self.show_answer_var)
+        self.show_answer_checkbox.place(x=270, y=12)
 
+        self.queperbox_lbl = ctk.CTkLabel(self.bottomframe, text="Many rows in one table : ", 
+                                           font=('Fresca', 16))
+        self.queperbox_lbl.place(x=415, y=10)
+
+        self.queperbox_entry = ctk.CTkEntry(self.bottomframe, height=32, width=100, 
+                                     text_color='white', bg_color='transparent', 
+                                     font=('Fresca', 16))
+        self.queperbox_entry.place(x=580, y=10)
 
         # Button
 
         self.backBtn = ctk.CTkButton(self.master, text="Back", height=35, command=self.onclosing)
-        self.backBtn.place(x=20, y=400)
+        self.backBtn.place(x=20, y=405)
 
         self.startScan = ctk.CTkButton(self.master, text="Start Scanning", height=35,
                                        command=self.start_scanning_btn)
-        self.startScan.place(x=640, y=400)
+        self.startScan.place(x=640, y=405)
 
         self.protocol("WM_DELETE_WINDOW", self.onclosing)
 
