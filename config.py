@@ -1,32 +1,9 @@
-from PIL import Image, ImageTk
 import openpyxl as xl
-import tkinter as tk
 import os
 
 from modules import db_helper as dbh, database
 from pages import page_signup as signup, page_signin as signin
 import main as main
-
-
-class WebCam:
-    def __init__(self, root):
-        self.root = root
-        self.camera_no: int = 0
-        self.camera_width: int = 0
-        self.camera_height: int = 0
-        self.current_angle: int = 0
-    
-    def image_rotate(self):
-        # Merotasi gambar
-        self.current_angle += 90
-        rotated_image = self.image.rotate(self.current_angle)
-
-        # Membuat objek Tkinter dari gambar yang telah dirotasi
-        rotated_tk_image = ImageTk.PhotoImage(rotated_image)
-
-        # Memperbarui gambar pada label
-        self.label.configure(image=rotated_tk_image)
-        self.label.image = rotated_tk_image
 
 
 class PY_XL:

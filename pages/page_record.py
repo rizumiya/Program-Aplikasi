@@ -2,6 +2,7 @@ import tkinter as tk
 import customtkinter as ctk
 import config as cfg
 
+from tkinter import messagebox
 from modules import db_helper as dbh, general_functions as func
 
 class PageRecord(ctk.CTk):
@@ -36,7 +37,8 @@ class PageRecord(ctk.CTk):
         self.recBaruFrame.place(x=20, y=100)
 
         # Subject to use
-        self.subject_box = ctk.CTkOptionMenu(master=self.recBaruFrame, width=210, values=self.subject_names)  # Kurang values
+        self.subject_box = ctk.CTkOptionMenu(master=self.recBaruFrame, width=210, 
+                                             values=self.subject_names) 
         self.subject_box.place(x=20, y=20)
 
         self.scdsubjlbl = ctk.CTkLabel(self.recBaruFrame, text="Question Behaviour")
@@ -56,7 +58,8 @@ class PageRecord(ctk.CTk):
         self.scdsubjlbl = ctk.CTkLabel(self.recBaruFrame, text="Second Subject", state='disabled')
         self.scdsubjlbl.place(x=20, y=130)
 
-        self.second_subject = ctk.CTkOptionMenu(master=self.recBaruFrame, width=210, state='disabled')
+        self.second_subject = ctk.CTkOptionMenu(master=self.recBaruFrame, width=210, 
+                                                values=self.subject_names, state='disabled')
         self.second_subject.place(x=20, y=160)
 
         # Midle section
@@ -72,11 +75,11 @@ class PageRecord(ctk.CTk):
 
         # check box save result
         self.saveresult_val = tk.IntVar()
-        self.cd_save_result = ctk.CTkCheckBox(self.resultFrame, border_width=2,
+        self.cb_save_result = ctk.CTkCheckBox(self.resultFrame, border_width=2,
                                               text="Save result", 
                                               variable=self.saveresult_val, 
                                               command=self.result_opt)
-        self.cd_save_result.place(x=20, y=20)
+        self.cb_save_result.place(x=20, y=20)
         
         # check box student id
         self.student_id = tk.IntVar()
@@ -154,20 +157,38 @@ class PageRecord(ctk.CTk):
         self.backBtn = ctk.CTkButton(self.master, text="Back", height=35, command=self.onclosing)
         self.backBtn.place(x=20, y=335)
 
-        self.startScan = ctk.CTkButton(self.master, text="Start Scanning", height=35)
+        self.startScan = ctk.CTkButton(self.master, text="Start Scanning", height=35,
+                                       command=self.get_all_value)
         self.startScan.place(x=640, y=335)
 
         self.protocol("WM_DELETE_WINDOW", self.onclosing)
 
 
     # Function
-    
 
-    def onclosing(self):
-        # Mengembalikan ke pengecekan awal
-        self.destroy()
-        main_app = cfg.config()
-        main_app
+    def get_all_value(self):
+        # ambil data subject
+        self.subject_1 = self.subject_box.get()
+        self.behaviour = self.multichoice_box.get()
+        self.subject_2 = self.second_subject.get() if self.multichoice_box.get() == "combined" else None
+        print(self.subject_1, self.behaviour, self.subject_2)
+
+        # ambil data save result
+        if self.totstudEntry.get() != "" and not self.totstudEntry.get().isdigit():
+            messagebox.showerror("Error", "Input must be a number")
+            return
+        
+        self.autosave = 1 if self.saveresult_val.get() == 1 else 0
+        self.order_sid = self.order_sid_opt.get() if self.student_id.get() == 1 else None
+        self.classroom_name = self.clsrmEnt.get() if self.clsrmEnt.get() != "" else None
+        self.total_student = self.totstudEntry.get() if self.totstudEntry.get() != "" else None
+        print(self.autosave, self.order_sid, self.classroom_name, self.total_student)
+
+    
+    def start_scanning_btn(self):
+        self.get_all_value()
+
+
 
 
     def que_behav_opt(self, selected_option):
@@ -204,3 +225,10 @@ class PageRecord(ctk.CTk):
         else:
             self.ordersidlbl.configure(state="disabled")
             self.order_sid_opt.configure(state="disabled")
+
+
+    def onclosing(self):
+        # Mengembalikan ke pengecekan awal
+        self.destroy()
+        main_app = cfg.config()
+        main_app
