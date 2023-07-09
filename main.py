@@ -185,7 +185,7 @@ class MainMenu(ctk.CTk):
         try:
             self.funct = func.Functions()
             setting = self.funct.getSettingData(self.userData[1], self.userData[2])
-            _, _ = self.funct.ambilJawaban(setting[3])
+            _, _ = self.funct.ambilJawaban(setting[3], setting[6])
 
             scan = scann.ScanModule(self.userData[1], self.userData[2])
             scan.start_scanning()

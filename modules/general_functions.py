@@ -9,7 +9,7 @@ class Functions:
             root.destroy()
 
     # ambil jawaban dari subject tertentu
-    def ambilJawaban(self, sub_name):
+    def ambilJawaban(self, sub_name, queperbox):
         db_subb = dbh.DB_Subject()
         sub_data = db_subb.getDataFromSubName(sub_name)
         self.jawaban = sub_data[4]
@@ -18,7 +18,7 @@ class Functions:
             # Menguraikan string menjadi list yang valid
             jawaban_list = self.jawaban.split(', ')
             jawaban_list = [int(elem) for elem in jawaban_list]
-            jawaban_sublist = [jawaban_list[i:i+10] for i in range(0, len(jawaban_list), 10)]
+            jawaban_sublist = [jawaban_list[i:i+queperbox] for i in range(0, len(jawaban_list), queperbox)]
             return sub_data, jawaban_sublist
         else:
             print("Data kunci jawaban tidak ditemukan")

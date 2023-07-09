@@ -22,17 +22,18 @@ class AdvanceScanModule:
 
         # Ambil data Subject dari database
         self.funct = func.Functions()
-        detailSub, jawaban = self.funct.ambilJawaban(self.subject_1)
+        detailSub, jawaban = self.funct.ambilJawaban(self.subject_1, self.queperbox)
 
         self.subject_name = detailSub[1]
         self.question = detailSub[2]
         self.choice = detailSub[3]
         self.ansid = 0
         self.ans = jawaban
+        print(self.ans)
         self.box_pilgan = self.question // self.queperbox + (self.question % self.queperbox > 0)
 
         self.webcam_on = False
-        self.imgPath = "p.jpg"
+        self.imgPath = "p1.jpg"
         now = datetime.now()
         self.waktu = now.strftime("%Y-%m-%d %H:%M")
         self.widthImg = 600

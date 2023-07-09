@@ -12,7 +12,7 @@ class ScanModule:
         # ambil data setting dan subject
         self.funct = func.Functions()
         setting = self.funct.getSettingData(userp, passw)
-        detailSub, jawaban = self.funct.ambilJawaban(setting[3])
+        detailSub, jawaban = self.funct.ambilJawaban(setting[3], setting[6])
 
         # Mengisi variable utama
 
