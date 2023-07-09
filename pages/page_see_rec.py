@@ -22,7 +22,6 @@ class PageSeeRecord(ctk.CTkToplevel):
                                     font=('Fugaz One', 36, 'bold'))
         self.heading.place(x=20, y=10)
 
-
         # Entry untuk Classroom
         
         self.classroom_label = ctk.CTkLabel(self, text="Classroom")
@@ -60,6 +59,7 @@ class PageSeeRecord(ctk.CTkToplevel):
 
         self.after(300, self.lift)
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
+
 
     # Function
 

@@ -104,11 +104,9 @@ class config:
         dataExists = db_helper.checkIfdataExists()
         
         if dataExists:
-            print("Buka Sign In")
             sign_in_form = signin.PageSignIn()
             sign_in_form.mainloop()
         else:
-            print("Buka Sign Up")
             sign_up_form = signup.PageSignUp()
             sign_up_form.mainloop()
 
