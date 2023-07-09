@@ -10,7 +10,7 @@ from typing import List
 
 import config as cfg
 from modules import general_functions as func, db_helper as dbh, scan_module as scann
-from pages import page_signin as signin, page_setting as sett, page_subject as subb, page_record as recc
+from pages import page_signin as signin, page_setting as sett, page_subject as subb, page_record as recc, page_see_rec as srecc
 
 
 class MainMenu(ctk.CTk):
@@ -19,7 +19,7 @@ class MainMenu(ctk.CTk):
         self.title('OMRay')
         self.geometry('989x732+60+65')
         self.resizable(False, False)
-        self.iconbitmap('assets/images/OMRay.ico')
+        self.iconbitmap(default='assets/images/OMRay.ico')
 
         # Deklarasi variable
         self.userData: List[str] = userData
@@ -29,7 +29,8 @@ class MainMenu(ctk.CTk):
         settData = self.funct.getSettingData(userData[1], userData[2])
         self.settData: List[str] = settData
         
-        self.toplevel_window = None
+        self.toplevel_setting = None
+        self.toplevel_srecc = None
 
         # Membuat Header
         self.img = ctk.CTkImage(dark_image=Image.open("assets/images/wp1.png"), size=(160, 160))
@@ -88,14 +89,15 @@ class MainMenu(ctk.CTk):
                                     font=('Fredoka One', 24, 'bold'), command=self.setting_btn)
         self.sett_button.place(x=30, y=410)
 
-        # add new record
+        # add see record
         self.img_seerec = ctk.CTkImage(light_image=Image.open(
             "assets/images/see_exc.png"), size=(85, 85))
 
         self.seerec_button = ctk.CTkButton(self, text="See Record", image=self.img_seerec, compound=TOP, 
                                     fg_color="#fff", hover_color="#B2B2B2", text_color="#333030", 
                                     corner_radius=25, width=200, height=180, cursor='hand2', 
-                                    font=('Fredoka One', 24, 'bold'))
+                                    font=('Fredoka One', 24, 'bold'), command=self.see_record_btn
+                                    )
         self.seerec_button.place(x=250, y=410)
 
         # Create a new scan
@@ -200,11 +202,17 @@ class MainMenu(ctk.CTk):
         page_recc = recc.PageRecord()
         page_recc.mainloop()
 
-    def setting_btn(self):
-        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.toplevel_window = sett.PageSetting(self, 'OMRay | Setting', self.userData[1], self.userData[2])
+    def see_record_btn(self):
+        if self.toplevel_srecc is None or not self.toplevel_srecc.winfo_exists():
+            self.toplevel_srecc = srecc.PageSeeRecord(self)
         else:
-            self.toplevel_window.focus()
+            self.toplevel_srecc.focus()
+
+    def setting_btn(self):
+        if self.toplevel_setting is None or not self.toplevel_setting.winfo_exists():
+            self.toplevel_setting = sett.PageSetting(self, 'OMRay | Setting', self.userData[1], self.userData[2])
+        else:
+            self.toplevel_setting.focus()
 
     def logout_account(self, username, password):
         # Ubah nilai status dari username dan password menjadi on
