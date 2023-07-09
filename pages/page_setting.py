@@ -2,6 +2,7 @@ from tkinter import messagebox
 import customtkinter as ctk
 from tkinter import *
 
+import config as cfg
 from modules import db_helper as dbh, general_functions as func
 
 
@@ -37,7 +38,7 @@ class PageSetting(ctk.CTkToplevel):
         self.defaultScn_label = ctk.CTkLabel(self, text="Default Scanning", font=('Fresca', 16))
         self.defaultScn_label.place(x=20, y=70)
 
-        self.defaultScanScrollableFrame = ctk.CTkScrollableFrame(self, width=300, height=80)
+        self.defaultScanScrollableFrame = ctk.CTkScrollableFrame(self, width=300, height=85)
         self.defaultScanScrollableFrame.place(x=20, y=100)
 
         self.aturtampilan = ctk.CTkLabel(self.defaultScanScrollableFrame, text="", 
@@ -65,12 +66,12 @@ class PageSetting(ctk.CTkToplevel):
 
         self.subject_label = ctk.CTkLabel(self.defaultScanScrollableFrame, text="Subject : ", 
                                           font=('Fresca', 16))
-        self.subject_label.place(x=10, y=60)
+        self.subject_label.place(x=10, y=50)
 
         self.subject_box = ctk.CTkOptionMenu(master=self.defaultScanScrollableFrame,
                                     width=190, values=self.subject_names)
         self.subject_box.set(self.selectedSub)
-        self.subject_box.place(x=100, y=60)
+        self.subject_box.place(x=100, y=50)
 
 
         self.show_answer_var = ctk.BooleanVar()
@@ -83,7 +84,7 @@ class PageSetting(ctk.CTkToplevel):
         self.show_answer_checkbox = ctk.CTkCheckBox(self.defaultScanScrollableFrame, 
                                                     text='Show Answer', variable=self.show_answer_var)
 
-        self.show_answer_checkbox.place(x=10, y=110)
+        self.show_answer_checkbox.place(x=10, y=90)
 
         self.auto_save_var = ctk.BooleanVar()
 
@@ -94,7 +95,16 @@ class PageSetting(ctk.CTkToplevel):
 
         self.auto_save_checkbox = ctk.CTkCheckBox(self.defaultScanScrollableFrame, 
                                                   text='Auto Save', variable=self.auto_save_var)
-        self.auto_save_checkbox.place(x=160, y=110)
+        self.auto_save_checkbox.place(x=160, y=90)
+
+        self.queperbox_lbl = ctk.CTkLabel(self.defaultScanScrollableFrame, text="Many rows in one table : ",
+                                           font=('Fresca', 16))
+        self.queperbox_lbl.place(x=10, y=130)
+
+        self.queperbox_entry = ctk.CTkEntry(self.defaultScanScrollableFrame, height=32, width=100, 
+                                     text_color='white', bg_color='transparent',placeholder_text="Empty = 10",
+                                     font=('Fresca', 16))
+        self.queperbox_entry.place(x=190, y=130)
 
         # Bagian kanan =============================================================================
 
@@ -132,7 +142,7 @@ class PageSetting(ctk.CTkToplevel):
 
         self.delete_button = ctk.CTkButton(self.accountScanScrollableFrame, text="Delete account", 
                                            width=130, height=35, fg_color="#a13535", 
-                                           hover_color="#a61717")
+                                           hover_color="#a61717", command=self.deleteAccount)
         self.delete_button.place(x=150, y=150)
 
         # Menambahkan tombol untuk menyimpan pengaturan
@@ -161,6 +171,45 @@ class PageSetting(ctk.CTkToplevel):
         db_sett.def_sub = self.subject_box.get()
         db_sett.showAnswer = self.show_answer_checkbox.get()
         db_sett.autoSave = self.auto_save_checkbox.get()
+        db_sett.quePerBox = self.queperbox_entry.get() if self.queperbox_entry.get() != "" else 10
         db_sett.updateSetting(self.idLogin)
-        messagebox.showinfo('Setting', "Settings and password updated!")
+        newpas, mesg = self.updatePass()
+        messagebox.showinfo('Setting', mesg)
+        if newpas:
+            self.destroy()
+            self.master.destroy()
+            cfg.config()
         self.destroy()
+
+    def deleteAccount(self):
+        db_user = dbh.DB_User()
+        db_subb = dbh.DB_Subject()
+        db_sett = dbh.DB_Setting()
+
+        _, data_user = db_user.checkActiveUser()
+        if messagebox.askokcancel("Delete account", "Are you sure want to delete your account?"):
+            subjects = db_subb.getSubjectASC(data_user[0][0])
+            for sub in subjects:
+                db_subb.deleteSubName(sub[1])
+            db_sett.deleteSetting(data_user[0][0])
+            db_user.deleteUser()
+
+            messagebox.showinfo("Success","Account has been deleted")
+            self.master.destroy()
+            cfg.config()
+
+    def updatePass(self):
+        self.newPass = self.newPass_entry.get()
+        self.oldPass = self.oldPass_entry.get()
+
+        db_user = dbh.DB_User()
+        _, data_user = db_user.checkActiveUser()
+
+        if not all([self.newPass, self.oldPass]):
+            return None, "Settings updated!"
+        elif self.oldPass != data_user[0][2]:
+            messagebox.showerror("Invalid", "Old password doesn't match!")
+            return None, "Settings updated!"
+        else: 
+            db_user.editLoginPass(self.newPass, 'on')
+            return 1, "Settings and password updated!"

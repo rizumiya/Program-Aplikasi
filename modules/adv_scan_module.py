@@ -7,7 +7,7 @@ from . import general_functions as func
 
 
 class AdvanceScanModule:
-    def __init__(self, subject_1, behaviour, subject_2, cam_no):
+    def __init__(self, subject_1, behaviour, subject_2, cam_no, queperbox):
         # Inisialisasi variable awal
         self.autosave = 0
         self.order_sid = None
@@ -17,6 +17,7 @@ class AdvanceScanModule:
         self.subject_2 = subject_2
         self.behaviour = behaviour
         self.camera_number = cam_no
+        self.queperbox = queperbox
 
         # Ambil data Subject dari database
         self.funct = func.Functions()

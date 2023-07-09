@@ -74,6 +74,7 @@ class DB_User(db_helper):
     def __init__(self):
         super().__init__()
         self.table_name = "logins"
+        self.fields = None
 
     def checkActiveUser(self):
         dbase = db.Database()
@@ -122,6 +123,19 @@ class DB_User(db_helper):
         self.values = (username, password)
         idLogin = self.getIdFromData()
         return idLogin
+    
+    def editLoginPass(self, passw, stat):
+        self.table_name = self.table_name
+        self.fields=["password"]
+        self.values=[passw]
+        self.condition=f"status='{stat}'"
+        self.changeValue()
+
+    def deleteUser(self):
+        self.table_name = self.table_name
+        self.condition=f"status='on'"
+        self.deleteDataFromTable()
+
 
 
 class DB_Setting(db_helper):
@@ -161,6 +175,11 @@ class DB_Setting(db_helper):
         self.values=(self.cameraNo, self.def_sub, self.showAnswer, self.autoSave, self.quePerBox)
         self.condition=f"id_login={id_login}"
         self.changeValue()
+
+    def deleteSetting(self, idlogin):
+        self.table_name = self.table_name
+        self.condition=f"id_login={idlogin}"
+        self.deleteDataFromTable()
         
 
 class DB_Subject(db_helper):

@@ -66,6 +66,8 @@ class PageSignIn(ctk.CTk):
 
         self.protocol("WM_DELETE_WINDOW", self.onclosing)
 
+    # Function
+
     def checkEntryValidity(self, username, password):
         if len(username) == 0 or len(password) == 0:
             messagebox.showerror('Invalid', "All fields required!")
