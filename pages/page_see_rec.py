@@ -24,13 +24,13 @@ class PageSeeRecord(ctk.CTkToplevel):
 
         # Entry untuk Classroom
         
-        self.classroom_label = ctk.CTkLabel(self, text="Classroom")
+        self.classroom_label = ctk.CTkLabel(self, text="Classroom", font=('Fresca', 16))
         self.classroom_label.place(x=20, y=70)
         self.classroom_entry = ctk.CTkEntry(self, width=120, font=('Fresca', 16))
         self.classroom_entry.place(x=20, y=100)
 
         # Entry untuk Student ID
-        self.classroom_label = ctk.CTkLabel(self, text="Student ID")
+        self.classroom_label = ctk.CTkLabel(self, text="Student ID", font=('Fresca', 16))
         self.classroom_label.place(x=150, y=70)
         self.student_id_entry = ctk.CTkEntry(self, width=120, font=('Fresca', 16))
         self.student_id_entry.place(x=150, y=100)

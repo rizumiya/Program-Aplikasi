@@ -3,13 +3,13 @@ import customtkinter as ctk
 import config as cfg
 
 from tkinter import messagebox
-from modules import db_helper as dbh, general_functions as func
+from modules import adv_scan_module as asm, general_functions as func
 
 class PageRecord(ctk.CTk):
     def __init__(self, idlogin):
         super().__init__()
         self.title("OMRay | Add New Record")
-        self.geometry('800x385+60+65')
+        self.geometry('800x445+60+65')
         self.resizable(False, False)
         self.iconbitmap('assets/images/OMRay.ico')
 
@@ -41,7 +41,8 @@ class PageRecord(ctk.CTk):
                                              values=self.subject_names) 
         self.subject_box.place(x=20, y=20)
 
-        self.scdsubjlbl = ctk.CTkLabel(self.recBaruFrame, text="Question Behaviour")
+        self.scdsubjlbl = ctk.CTkLabel(self.recBaruFrame, text="Question Behaviour",
+                                       font=('Fresca', 16))
         self.scdsubjlbl.place(x=20, y=60)
 
         # question behaviour
@@ -55,7 +56,8 @@ class PageRecord(ctk.CTk):
         self.multichoice_box.place(x=20, y=90)
 
         # subject ke 2 jika combined terpilih
-        self.scdsubjlbl = ctk.CTkLabel(self.recBaruFrame, text="Second Subject", state='disabled')
+        self.scdsubjlbl = ctk.CTkLabel(self.recBaruFrame, text="Second Subject", 
+                                       state='disabled', font=('Fresca', 16))
         self.scdsubjlbl.place(x=20, y=130)
 
         self.second_subject = ctk.CTkOptionMenu(master=self.recBaruFrame, width=210, 
@@ -102,7 +104,7 @@ class PageRecord(ctk.CTk):
 
         # max student in classroom
         self.totstudent_lbl = ctk.CTkLabel(self.resultFrame, text="Total students", 
-                                           state='disabled')
+                                           state='disabled', font=('Fresca', 16))
         self.totstudent_lbl.place(x=140, y=60)
 
         self.totstudEntry = ctk.CTkEntry(self.resultFrame, height=32, width=100, 
@@ -112,7 +114,7 @@ class PageRecord(ctk.CTk):
 
         self.ordersidlbl = ctk.CTkLabel(self.resultFrame, 
                                         text="Order student id by", 
-                                        state='disabled')
+                                        state='disabled', font=('Fresca', 16))
         self.ordersidlbl.place(x=20, y=140)
 
         # urutan sid
@@ -154,12 +156,42 @@ class PageRecord(ctk.CTk):
                                       font=('Fresca', 17))
         self.help4_lbl.place(x=20, y=145)
 
+        # Bottom section
+
+        self.bottomframe = ctk.CTkFrame(self.master, width=800, height= 50)
+        self.bottomframe.place(x=20, y=340)
+
+        self.camera_label = ctk.CTkLabel(self.bottomframe, text="Camera : ", font=('Fresca', 16))
+        self.camera_label.place(x=20, y=10)
+
+        self.options = {
+            0: "Default webcam",
+            1: "External source"
+        }
+
+        self.caption = self.options[0]
+        self.defaultCam = ctk.StringVar(value=self.caption)
+
+        self.camera_box = ctk.CTkOptionMenu(master=self.bottomframe,
+                                    width=150,
+                                    values=list(self.options.values()),
+                                    variable=self.defaultCam)
+        self.camera_box.place(x=80, y=10)
+
+        self.show_answer_var = ctk.BooleanVar()
+        self.show_answer_checkbox = ctk.CTkCheckBox(self.bottomframe, text='Show Answer',
+                                                    variable=self.show_answer_var)
+        self.show_answer_checkbox.place(x=240, y=10)
+
+
+        # Button
+
         self.backBtn = ctk.CTkButton(self.master, text="Back", height=35, command=self.onclosing)
-        self.backBtn.place(x=20, y=335)
+        self.backBtn.place(x=20, y=400)
 
         self.startScan = ctk.CTkButton(self.master, text="Start Scanning", height=35,
-                                       command=self.get_all_value)
-        self.startScan.place(x=640, y=335)
+                                       command=self.start_scanning_btn)
+        self.startScan.place(x=640, y=400)
 
         self.protocol("WM_DELETE_WINDOW", self.onclosing)
 
@@ -187,8 +219,12 @@ class PageRecord(ctk.CTk):
     
     def start_scanning_btn(self):
         self.get_all_value()
-
-
+        adv_scan = asm.AdvanceScanModule(self.subject_1, self.behaviour, self.subject_2)
+        adv_scan.autosave = self.autosave
+        adv_scan.order_sid = self.order_sid
+        adv_scan.classroom_name = self.classroom_name
+        adv_scan.total_student = self.total_student
+        adv_scan.start_scanning()
 
 
     def que_behav_opt(self, selected_option):

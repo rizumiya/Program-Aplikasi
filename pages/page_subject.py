@@ -32,7 +32,7 @@ class PageSubject(ctk.CTk):
 
         # Bagian kiri
 
-        self.listSubjectlbl = ctk.CTkLabel(self.master, text="Current Subjects")
+        self.listSubjectlbl = ctk.CTkLabel(self.master, text="Current Subjects", font=('Fresca', 16))
         self.listSubjectlbl.place(x=20, y=70)
 
         self.scrollable_frame = ctk.CTkScrollableFrame(self.master, width=110, height=40)
@@ -43,7 +43,7 @@ class PageSubject(ctk.CTk):
 
         # Bagian kanan
 
-        self.buatBarulbl = ctk.CTkLabel(self.master, text="Add new Subject")
+        self.buatBarulbl = ctk.CTkLabel(self.master, text="Add new Subject", font=('Fresca', 16))
         self.buatBarulbl.place(x=165, y=70)
 
         self.subBaruFrame = ctk.CTkFrame(self.master, width=250, height=220)
@@ -75,16 +75,16 @@ class PageSubject(ctk.CTk):
 
         # Bagian edit subject
 
-        self.editSub = ctk.CTkLabel(self.master, text="Update existed subject")
+        self.editSub = ctk.CTkLabel(self.master, text="Update existed subject", font=('Fresca', 16))
         self.editSub.place(x=430, y=70)
 
         self.subEditFrame = ctk.CTkFrame(self.master, width=250, height=220)
         self.subEditFrame.place(x=430, y=100)
 
-        self.subject_label = ctk.CTkLabel(self.subEditFrame, text="Subject : ")
+        self.subject_label = ctk.CTkLabel(self.subEditFrame, text="Subject : ", font=('Fresca', 16))
         self.subject_label.place(x=20, y=10)
 
-        self.action_label = ctk.CTkLabel(self.subEditFrame, text="Action : ")
+        self.action_label = ctk.CTkLabel(self.subEditFrame, text="Action : ", font=('Fresca', 16))
         self.action_label.place(x=20, y=80)
         
         self.editSubBtn = ctk.CTkButton(self.subEditFrame, text="Edit Subject", height=35,
@@ -148,7 +148,7 @@ class PageSubject(ctk.CTk):
         self.buatUlangWidget()
 
         for i, row in enumerate(self.subject_names):
-            label = ctk.CTkLabel(self.scrollable_frame, text=row)
+            label = ctk.CTkLabel(self.scrollable_frame, text=row, font=('Fresca', 16))
             label.grid(row=i, column=0, sticky="w")
 
     def buatUlangWidget(self):
@@ -228,12 +228,12 @@ class CheckBoxWindow(ctk.CTkToplevel):
 
         # Atur widget 
 
-        ctk.CTkLabel(self, text="", width=500, height=120).grid(row=0, column=0, columnspan=self.banyakPilihan)
+        ctk.CTkLabel(self, text="", width=500, height=120, font=('Fresca', 16)).grid(row=0, column=0, columnspan=self.banyakPilihan)
 
         self.heading = ctk.CTkLabel(self, text='Add Answer Key', text_color='#fff', font=('Fugaz One', 36, 'bold'))
         self.heading.place(x=20, y=10)
         
-        ctk.CTkLabel(self, text="Question number " + str(self.nomorKe)).place(relx=0.5, y=90, anchor=CENTER)
+        ctk.CTkLabel(self, text="Question number " + str(self.nomorKe), font=('Fresca', 17, 'bold')).place(relx=0.5, y=90, anchor=CENTER)
 
         # Perulangan untuk membuat widget checkbox
 
@@ -248,7 +248,7 @@ class CheckBoxWindow(ctk.CTkToplevel):
 
     def save_checkbox_values(self):
         self.nomorKe += 1
-        ctk.CTkLabel(self, text="Question number " + str(self.nomorKe)).place(relx=0.5, y=90, anchor=CENTER)
+        ctk.CTkLabel(self, text="Question number " + str(self.nomorKe), font=('Fresca', 17, 'bold')).place(relx=0.5, y=90, anchor=CENTER)
 
         if all(var.get() == 0 for var in self.checkbox_vars):
             messagebox.showerror("Invalid", "Please select at least one answer")

@@ -34,16 +34,18 @@ class PageSetting(ctk.CTkToplevel):
 
         # Bagian kiri
 
-        self.defaultScn_label = ctk.CTkLabel(self, text="Default Scanning")
+        self.defaultScn_label = ctk.CTkLabel(self, text="Default Scanning", font=('Fresca', 16))
         self.defaultScn_label.place(x=20, y=70)
 
         self.defaultScanScrollableFrame = ctk.CTkScrollableFrame(self, width=300, height=80)
         self.defaultScanScrollableFrame.place(x=20, y=100)
 
-        self.aturtampilan = ctk.CTkLabel(self.defaultScanScrollableFrame, text="")
+        self.aturtampilan = ctk.CTkLabel(self.defaultScanScrollableFrame, text="", 
+                                         font=('Fresca', 16))
         self.aturtampilan.grid(row=0, column=0, padx=0, pady=80, sticky="n")
 
-        self.camera_label = ctk.CTkLabel(self.defaultScanScrollableFrame, text="Camera : ")
+        self.camera_label = ctk.CTkLabel(self.defaultScanScrollableFrame, text="Camera : ", 
+                                         font=('Fresca', 16))
         self.camera_label.place(x=10, y=10)
 
         self.options = {
@@ -61,7 +63,8 @@ class PageSetting(ctk.CTkToplevel):
         self.camera_box.place(x=100, y=10)
 
 
-        self.subject_label = ctk.CTkLabel(self.defaultScanScrollableFrame, text="Subject : ")
+        self.subject_label = ctk.CTkLabel(self.defaultScanScrollableFrame, text="Subject : ", 
+                                          font=('Fresca', 16))
         self.subject_label.place(x=10, y=60)
 
         self.subject_box = ctk.CTkOptionMenu(master=self.defaultScanScrollableFrame,
@@ -95,16 +98,19 @@ class PageSetting(ctk.CTkToplevel):
 
         # Bagian kanan =============================================================================
 
-        self.defaultScn_label = ctk.CTkLabel(self, text="Account Setting")
+        self.defaultScn_label = ctk.CTkLabel(self, text="Account Setting", 
+                                             font=('Fresca', 16))
         self.defaultScn_label.place(x=360, y=70)
 
         self.accountScanScrollableFrame = ctk.CTkScrollableFrame(self, width=300, height=80)
         self.accountScanScrollableFrame.place(x=360, y=100)
 
-        self.aturtampilan = ctk.CTkLabel(self.accountScanScrollableFrame, text="")
+        self.aturtampilan = ctk.CTkLabel(self.accountScanScrollableFrame, text="", 
+                                         font=('Fresca', 16))
         self.aturtampilan.grid(row=0, column=0, padx=0, pady=80, sticky="n")
 
-        self.password_label = ctk.CTkLabel(self.accountScanScrollableFrame, text="Change password")
+        self.password_label = ctk.CTkLabel(self.accountScanScrollableFrame, text="Change password", 
+                                           font=('Fresca', 16))
         self.password_label.place(x=10, y=10)
 
         self.oldPass_entry = ctk.CTkEntry(self.accountScanScrollableFrame, height=40, 
