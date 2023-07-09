@@ -218,20 +218,22 @@ class PageRecord(ctk.CTk):
         self.cam_no = self.ambilCam()
         self.show_answer = self.show_answer_checkbox.get()
         self.queperbox = int(self.queperbox_entry.get()) if self.queperbox_entry.get() != "" else 10
-        print(self.subject_1, self.behaviour, self.cam_no, self.queperbox, self.show_answer)
+        # print(self.subject_1, self.behaviour, self.cam_no, self.queperbox, self.show_answer)
 
         # ambil data save result
         self.autosave = 1 if self.saveresult_val.get() == 1 else 0
+        self.use_sid = self.student_id.get()
         self.order_sid = self.order_sid_opt.get() if self.student_id.get() == 1 else None
         self.classroom_name = self.clsrmEnt.get() if self.clsrmEnt.get() != "" else None
         self.total_student = int(self.totstudEntry.get()) if self.totstudEntry.get() != "" else None
-        print(self.autosave, self.order_sid, self.classroom_name, self.total_student)
+        # print(self.autosave, self.order_sid, self.classroom_name, self.total_student)
 
     
     def start_scanning_btn(self):
         self.get_all_value()
         adv_scan = asm.AdvanceScanModule(self.subject_1, self.behaviour, self.cam_no, self.queperbox)
         adv_scan.autosave = self.autosave
+        adv_scan.use_sid = self.use_sid
         adv_scan.order_sid = self.order_sid
         adv_scan.classroom_name = self.classroom_name
         adv_scan.total_student = self.total_student

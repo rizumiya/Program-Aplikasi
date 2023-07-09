@@ -10,8 +10,9 @@ class AdvanceScanModule:
     def __init__(self, subject_1, behaviour, cam_no, queperbox):
         # Inisialisasi variable awal
         self.autosave = 0
+        self.use_sid = 0
         self.order_sid = None
-        self.classroom_name = "Regular"
+        self.classroom_name = None
         self.total_student = 999
         self.subject_1 = subject_1
         self.behaviour = behaviour
@@ -21,9 +22,9 @@ class AdvanceScanModule:
 
         # Ambil data Subject dari database
         self.funct = func.Functions()
-        print("woe ", self.subject_1)
         detailSub, jawaban = self.funct.ambilJawaban(self.subject_1)
 
+        self.subject_name = detailSub[1]
         self.question = detailSub[2]
         self.choice = detailSub[3]
         self.ansid = 0
@@ -55,7 +56,6 @@ class AdvanceScanModule:
         self.current = self.is_pressed
         if (self.previous is False) and (self.current is True): 
             self.rotate = (self.rotate + 90) % 360
-            # print(self.rotate)
         self.previous = self.current
 
         if self.rotate == 90:
@@ -89,7 +89,6 @@ class AdvanceScanModule:
 
     def splitBoxes(self, frame, min_width=20, min_height=20):
         height, width = frame.shape
-        print(width, self.choice)
         cell_width = max(width // self.choice, min_width)
         cell_height = max(height // self.queperbox, min_height)
 
@@ -256,13 +255,12 @@ class AdvanceScanModule:
 
     def save_to_excel(self):
         xlPath = "assets/datas/omray.xlsx"
-        if not self.classroom:
-            classroom = "Regular"
+        classroom = "Regular" if not self.classroom_name else self.classroom_name
         # menyimpan data ke sheet 1
         workbook0 = openpyxl.load_workbook(xlPath)
         workbook0._active_sheet_index = 0
         sheet0 = workbook0.active
-        sheet0.append([self.waktu, self.selectedSub, classroom])
+        sheet0.append([self.waktu, self.subject_name, classroom])
         workbook0.save(xlPath)
 
 
@@ -299,9 +297,6 @@ class AdvanceScanModule:
                 boxes = self.splitBoxes(imgTresh)
                 self.ansid = i
 
-                # for i, box in enumerate(boxes):
-                #     cv2.imshow(f"Box {i+1}", box)
-
                 jawaban_benar, penilaian = self.check_answer(boxes)
                 
                 jwb_benar += jawaban_benar
@@ -330,7 +325,7 @@ class AdvanceScanModule:
             # Menghentikan program jika tombol 'q' ditekan
             key = cv2.waitKey(10)
             if key == ord('q'):
-                if self.autoSave:
+                if self.autosave:
                     self.save_to_excel()
                 break
             elif key == ord('r'):
