@@ -190,7 +190,7 @@ class MainMenu(ctk.CTk):
             scan = scann.ScanModule(self.userData[1], self.userData[2])
             scan.start_scanning()
         except:
-            messagebox.showerror('Invalid', 'No default subject selected')
+            messagebox.showerror('Error', 'Check your Default Subject and Number of Rows in setting')
 
     def subject_btn(self):
         self.destroy()
