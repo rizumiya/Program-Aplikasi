@@ -22,10 +22,10 @@ class ScanModule:
         self.selectedSub = setting[3]
         self.show_answer = setting[4]
         self.autoSave = setting[5]
+        self.queperbox = setting[6] # numbers per box
 
         # variable subject
         self.question = detailSub[2]
-        self.queperbox = detailSub[3] # numbers per box
         self.choice = detailSub[4]
         self.ansid = 0
         self.ans = jawaban

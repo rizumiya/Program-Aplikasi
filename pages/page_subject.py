@@ -18,7 +18,6 @@ class PageSubject(ctk.CTk):
         # Inisialisasi variable
         self.id_login = id_login
         self.bykSoal: int = 0
-        self.bykSoalBox: int = 10
         self.namaSub: str = "No Subject"
         self.bykPilgan: int = 0
         self.subjectName = []
@@ -63,15 +62,10 @@ class PageSubject(ctk.CTk):
                                          text_color='white', placeholder_text='Number of options', 
                                          bg_color='transparent', font=('Fresca', 16))
         self.banyakPilgan.place(x=20, y=120)
-
-        self.bykSoalperbox = ctk.CTkEntry(self.subBaruFrame, height=32, width=210, 
-                                         text_color='white', placeholder_text='Many rows in one table', 
-                                         bg_color='transparent', font=('Fresca', 16))
-        self.bykSoalperbox.place(x=20, y=170)
         
-        self.confirmNew = ctk.CTkButton(self.master, text="Create Subject", 
+        self.confirmNew = ctk.CTkButton(self.subBaruFrame, text="Create Subject", 
                                         height=35, command=self.show_checkbox_window)
-        self.confirmNew.place(x=540, y=335)
+        self.confirmNew.place(relx=0.5, y=185, anchor=CENTER)
 
         # Bagian edit subject
 
@@ -120,6 +114,7 @@ class PageSubject(ctk.CTk):
             db_sett.def_sub = "No Subject"
             db_sett.showAnswer = sett_data[0][4]
             db_sett.autoSave = sett_data[0][5]
+            db_sett.quePerBox = sett_data[0][6]
             db_sett.updateSetting(self.id_login)
 
     def del_sub_btn(self):
@@ -182,7 +177,6 @@ class PageSubject(ctk.CTk):
             else:
                 self.bykPilgan = int(self.banyakPilgan.get())
                 self.bykSoal = int(self.banyakSoal.get())
-                self.bykSoalBox = int(self.bykSoalperbox.get())
                 self.namaSub = self.namaSubject.get()
                 self.open_toplevel()
                 self.cleanEntry()
@@ -192,7 +186,7 @@ class PageSubject(ctk.CTk):
             messagebox.showerror("Error", "Number of questions not set")
             return
         elif self.toplevel_window is None or not self.toplevel_window.winfo_exists():
-            self.toplevel_window = CheckBoxWindow(self.id_login, self.bykPilgan, self.bykSoal, self.bykSoalBox, self.namaSub)
+            self.toplevel_window = CheckBoxWindow(self.id_login, self.bykPilgan, self.bykSoal, self.namaSub)
         else:
             self.toplevel_window.focus()
 
@@ -205,7 +199,7 @@ class PageSubject(ctk.CTk):
 # = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = = 
 
 class CheckBoxWindow(ctk.CTkToplevel):
-    def __init__(self, id_login, bykPilgan, bykSoal, bykSoalBox, namaSub):
+    def __init__(self, id_login, bykPilgan, bykSoal, namaSub):
         super().__init__()
         self.title("OMRay | Subject")
         self.geometry('500x280+1200+90')
@@ -220,7 +214,6 @@ class CheckBoxWindow(ctk.CTkToplevel):
         self.namaSub: str = namaSub
         self.banyakPilihan: int = bykPilgan
         self.banyakSoal: int = bykSoal
-        self.banyakSoalPerBox: int = bykSoalBox
 
         # Iterasi nomor
         self.nomorKe: int = 0
@@ -278,8 +271,7 @@ class CheckBoxWindow(ctk.CTkToplevel):
         insertNewSubject = db_sub.addSubject(
             self.id_login, 
             self.namaSub, 
-            self.banyakSoal, 
-            self.banyakSoalPerBox, 
+            self.banyakSoal,
             self.banyakPilihan + 1, 
             self.jawaban
         )

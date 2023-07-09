@@ -134,6 +134,7 @@ class DB_Setting(db_helper):
         self.def_sub: str = ""
         self.showAnswer: int = 0
         self.autoSave: int = 0
+        self.quePerBox: int = 10
     
     def getDataSetting(self):
         db_user = DB_User()
@@ -150,14 +151,14 @@ class DB_Setting(db_helper):
         id = db_user.getIdLogin(self.username, self.password)
         dbase.create_data(
                 table_name=self.table_name,
-                fields=["id_login", "cameraNo", "def_subject", "showAnswer", "autoSave"],
-                values=[id, 0, "No Subject", 1, 1]
+                fields=["id_login", "cameraNo", "def_subject", "showAnswer", "autoSave", "quePerBox"],
+                values=[id, 0, "No Subject", 1, 1, 10]
             )
         
     def updateSetting(self, id_login):
         self.table_name=self.table_name
-        self.fields=["cameraNo", "def_subject", "showAnswer", "autoSave"]
-        self.values=(self.cameraNo, self.def_sub, self.showAnswer, self.autoSave)
+        self.fields=["cameraNo", "def_subject", "showAnswer", "autoSave", "quePerBox"]
+        self.values=(self.cameraNo, self.def_sub, self.showAnswer, self.autoSave, self.quePerBox)
         self.condition=f"id_login={id_login}"
         self.changeValue()
         
@@ -185,13 +186,13 @@ class DB_Subject(db_helper):
             return True
         return False
     
-    def addSubject(self, idLogin, sub_name, bykSoal, bykSoalBox, bykPilgan, jawaban):
+    def addSubject(self, idLogin, sub_name, bykSoal, bykPilgan, jawaban):
         dbase = db.Database()
         if not self.checkSubjectExists(idLogin, sub_name):
             dbase.create_data(
                 table_name="subjects", 
-                fields=["sub_name", "sub_totalQuestion", "sub_quePerBox", "sub_choices", "sub_answer", "id_login"],
-                values=[sub_name, bykSoal, bykSoalBox, bykPilgan, jawaban, idLogin]
+                fields=["sub_name", "sub_totalQuestion", "sub_choices", "sub_answer", "id_login"],
+                values=[sub_name, bykSoal, bykPilgan, jawaban, idLogin]
             )
             return True
         return False

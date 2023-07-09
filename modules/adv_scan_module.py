@@ -26,7 +26,6 @@ class AdvanceScanModule:
             self.detailSub_2, self.jawaban_2 = self.funct.ambilJawaban(self.subject_2)
 
         self.question = detailSub_1[2]
-        self.queperbox = detailSub_1[3] # numbers per box
         self.choice = detailSub_1[4]
         self.ansid = 0
         self.ans = jawaban_1

@@ -22,7 +22,6 @@ class Database:
             id integer primary key autoincrement,
             sub_name text,
             sub_totalQuestion integer,
-            sub_quePerBox integer,
             sub_choices integer,
             sub_answer text,
             id_login integer
@@ -35,7 +34,8 @@ class Database:
             cameraNo integer, 
             def_subject text, 
             showAnswer integer, 
-            autoSave integer
+            autoSave integer,
+            quePerBox integer
         )""")
         
         self.conn.commit()
