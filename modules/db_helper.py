@@ -137,7 +137,6 @@ class DB_User(db_helper):
         self.deleteDataFromTable()
 
 
-
 class DB_Setting(db_helper):
     def __init__(self):
         super().__init__()
