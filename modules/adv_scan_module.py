@@ -7,17 +7,18 @@ from . import general_functions as func
 
 
 class AdvanceScanModule:
-    def __init__(self, subject_1, cam_no, queperbox):
+    def __init__(self, subject_1, cam_no, queperbox, order_sid, ttl_stud):
         # Inisialisasi variable awal
         self.autosave = 0
         self.use_sid = 0
-        self.order_sid = None
+        self.order_sid = order_sid
         self.classroom_name = None
-        self.total_student = 999
+        self.total_student = ttl_stud if ttl_stud != None else 999
         self.subject_1 = subject_1
         self.camera_number = cam_no
         self.queperbox = queperbox
         self.show_answer = False
+        self.student_id = 1 if order_sid == "Ascending" and order_sid != None else self.total_student
 
         # Ambil data Subject dari database
         self.funct = func.Functions()
@@ -30,6 +31,7 @@ class AdvanceScanModule:
         self.ans = jawaban
         self.box_pilgan = self.question // self.queperbox + (self.question % self.queperbox > 0)
 
+        self.all_done = False
         self.webcam_on = True
         self.imgPath = "p1.jpg"
         now = datetime.now()
@@ -224,7 +226,7 @@ class AdvanceScanModule:
         return jawabanPixelVal
 
     
-    def check_answer(self, boxes):
+    def check_answer(self, boxes, i):
         jawabanPixelVal = self.get_student_answer(boxes)
 
         self.jawabanIndex = []
@@ -242,23 +244,56 @@ class AdvanceScanModule:
             if self.ans[self.ansid][x] != 0 and self.ans[self.ansid][x] == self.jawabanIndex[x]:
                 penilaian.append(1)
             else:
+                i = self.ansid * 10
                 penilaian.append(0)
-                salah.append(x + 1)
+                salah.append(x + 1 + i)
 
         jawab_benar = sum(penilaian)  # 1 nilai
 
-        return jawab_benar, penilaian
+        return jawab_benar, penilaian, salah
 
 
-    def save_to_excel(self):
+    def save_to_excel(self, sheet_index, **kwargs):
         xlPath = "assets/datas/omray.xlsx"
         classroom = "Regular" if not self.classroom_name else self.classroom_name
-        # menyimpan data ke sheet 1
-        workbook0 = openpyxl.load_workbook(xlPath)
-        workbook0._active_sheet_index = 0
-        sheet0 = workbook0.active
-        sheet0.append([self.waktu, self.subject_name, classroom])
-        workbook0.save(xlPath)
+
+        workbook = openpyxl.load_workbook(xlPath)
+        sheet = workbook.worksheets[sheet_index]
+
+        if sheet_index == 0:
+            sheet.append([self.waktu, self.subject_name, classroom])
+        else:
+            sheet.append([self.waktu, self.subject_name, classroom, self.student_id, kwargs["total_score"], str(kwargs["NoW"])])
+        
+        workbook.save(xlPath)
+
+
+    def next_student(self, NoW, total_score):
+        NoW = NoW if len(NoW) != 0 else "No wrong answer"
+
+        if self.order_sid == "Ascending" and self.student_id <= self.total_student:
+            self.save_to_excel(1, NoW=NoW, total_score=total_score)
+            self.student_id += 1
+        if self.order_sid == "Descending" and self.student_id >= 1:
+            self.save_to_excel(1, NoW=NoW, total_score=total_score)
+            self.student_id -= 1
+
+        if self.order_sid == "Ascending" and self.student_id > self.total_student:
+            self.all_done = True
+        elif self.order_sid == "Descending" and self.student_id == 0:
+            self.all_done = True
+    
+
+    def skip_student(self):
+        if self.order_sid == "Ascending" and self.order_sid != None:
+            self.student_id += 1
+        elif self.order_sid == "Descending" and self.order_sid != None:
+            self.student_id -= 1
+            
+        if self.order_sid == "Ascending" and self.student_id > self.total_student:
+            self.all_done = True
+        elif self.order_sid == "Descending" and self.student_id == 0:
+            self.all_done = True
 
 
     def start_scanning(self):
@@ -276,6 +311,8 @@ class AdvanceScanModule:
 
             total_score = 0
             jwb_benar = 0
+            get_salah = True
+            NoW = []
 
             # Menggambar kotak untuk setiap kontur
             for i, boxpilgan in enumerate(valid_contours):
@@ -294,7 +331,12 @@ class AdvanceScanModule:
                 boxes = self.splitBoxes(imgTresh)
                 self.ansid = i
 
-                jawaban_benar, penilaian = self.check_answer(boxes)
+                jawaban_benar, penilaian, salah = self.check_answer(boxes, i)
+
+                for wrong_ans in salah:
+                    if i < len(valid_contours) and get_salah:
+                        NoW.append(wrong_ans)
+
                 
                 jwb_benar += jawaban_benar
 
@@ -310,7 +352,11 @@ class AdvanceScanModule:
                                                     (self.widthImg, self.heightImg))
 
                     self.imgFinal = cv2.addWeighted(self.imgFinal, 1, imgInWarp, 1, 0)
-                    
+
+            if self.order_sid != None: 
+                cv2.putText(self.imgFinal, str(self.student_id), (500, 60),
+                    cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 0, 0), 3)
+
             # Perhitungan total score
             total_score = (jwb_benar / self.question) * 100
 
@@ -323,10 +369,19 @@ class AdvanceScanModule:
             key = cv2.waitKey(10)
             if key == ord('q'):
                 if self.autosave:
-                    self.save_to_excel()
+                    self.save_to_excel(0)
                 break
             elif key == ord('r'):
                 self.is_pressed = True
+            elif key == 13:
+                self.next_student(NoW, total_score)
+                self.get_salah = False
+            elif key == ord('s'):
+                self.skip_student()
+            
+            if self.all_done:
+                self.save_to_excel(0)
+                break
 
         self.cap.release()
         cv2.destroyAllWindows()

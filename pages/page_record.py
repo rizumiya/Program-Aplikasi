@@ -188,11 +188,15 @@ class PageRecord(ctk.CTk):
     def get_all_value(self):
         if self.queperbox_entry.get() != "" and not self.queperbox_entry.get().isdigit():
             messagebox.showerror("Error", "Input number of rows must be a number")
-            return
+            return False
         
         if self.totstudEntry.get() != "" and not self.totstudEntry.get().isdigit():
             messagebox.showerror("Error", "Input total students must be a number")
-            return
+            return False
+        
+        if self.order_sid_opt.get() == "Descending" and self.totstudEntry.get() == "":
+            messagebox.showerror("Error", "Descending order require total student")
+            return False
         
         # ambil data subject
         self.subject_1 = self.subject_box.get()
@@ -208,16 +212,17 @@ class PageRecord(ctk.CTk):
         self.classroom_name = self.clsrmEnt.get() if self.clsrmEnt.get() != "" else None
         self.total_student = int(self.totstudEntry.get()) if self.totstudEntry.get() != "" else None
         # print(self.autosave, self.order_sid, self.classroom_name, self.total_student)
+        return True
 
     
     def start_scanning_btn(self):
-        self.get_all_value()
-        adv_scan = asm.AdvanceScanModule(self.subject_1, self.cam_no, self.queperbox)
+        check = self.get_all_value()
+        if not check:
+            return
+        adv_scan = asm.AdvanceScanModule(self.subject_1, self.cam_no, self.queperbox, self.order_sid, self.total_student)
         adv_scan.autosave = self.autosave
         adv_scan.use_sid = self.use_sid
-        adv_scan.order_sid = self.order_sid
         adv_scan.classroom_name = self.classroom_name
-        adv_scan.total_student = self.total_student
         adv_scan.show_answer = self.show_answer
         adv_scan.start_scanning()
 
