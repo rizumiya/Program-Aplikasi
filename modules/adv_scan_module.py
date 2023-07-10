@@ -7,7 +7,7 @@ from . import general_functions as func
 
 
 class AdvanceScanModule:
-    def __init__(self, subject_1, behaviour, cam_no, queperbox):
+    def __init__(self, subject_1, cam_no, queperbox):
         # Inisialisasi variable awal
         self.autosave = 0
         self.use_sid = 0
@@ -15,7 +15,6 @@ class AdvanceScanModule:
         self.classroom_name = None
         self.total_student = 999
         self.subject_1 = subject_1
-        self.behaviour = behaviour
         self.camera_number = cam_no
         self.queperbox = queperbox
         self.show_answer = False
@@ -29,10 +28,9 @@ class AdvanceScanModule:
         self.choice = detailSub[3]
         self.ansid = 0
         self.ans = jawaban
-        print(self.ans)
         self.box_pilgan = self.question // self.queperbox + (self.question % self.queperbox > 0)
 
-        self.webcam_on = False
+        self.webcam_on = True
         self.imgPath = "p1.jpg"
         now = datetime.now()
         self.waktu = now.strftime("%Y-%m-%d %H:%M")
@@ -51,8 +49,6 @@ class AdvanceScanModule:
         self.create_threshold()
 
 
-
-        
     def rotate_img(self, frame):
         self.current = self.is_pressed
         if (self.previous is False) and (self.current is True): 

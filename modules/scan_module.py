@@ -32,7 +32,7 @@ class ScanModule:
         self.box_pilgan = self.question // self.queperbox + (self.question % self.queperbox > 0)
         self.classroom = None
 
-        self.webcam_on = False
+        self.webcam_on = True
         self.imgPath = "p.jpg"
         now = datetime.now()
         self.waktu = now.strftime("%Y-%m-%d %H:%M")

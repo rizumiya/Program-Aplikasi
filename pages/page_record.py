@@ -9,7 +9,7 @@ class PageRecord(ctk.CTk):
     def __init__(self, idlogin):
         super().__init__()
         self.title("OMRay | Add New Record")
-        self.geometry('800x450+60+65')
+        self.geometry('800x385+60+65')
         self.resizable(False, False)
         self.iconbitmap('assets/images/OMRay.ico')
 
@@ -28,7 +28,7 @@ class PageRecord(ctk.CTk):
         # Left section
 
         self.pilihSublbl = ctk.CTkLabel(self.master, 
-                                        text="Subject and Questions",
+                                        text="General Settings",
                                         font=('Fresca', 18))
         self.pilihSublbl.place(x=20, y=70)
 
@@ -41,23 +41,36 @@ class PageRecord(ctk.CTk):
                                              values=self.subject_names) 
         self.subject_box.place(x=20, y=20)
 
-        self.scdsubjlbl = ctk.CTkLabel(self.recBaruFrame, text="Question Behaviour",
-                                       font=('Fresca', 16))
-        self.scdsubjlbl.place(x=20, y=60)
+        self.queperbox_lbl = ctk.CTkLabel(self.recBaruFrame, text="Many rows in one table : ", 
+                                           font=('Fresca', 16))
+        self.queperbox_lbl.place(x=20, y=60)
 
-        # question behaviour
-        self.multichoice = ['regular multiple choice', 'complex multiple choice']
-        self.selected_option = tk.StringVar()
-        self.selected_option.set(self.multichoice[0])
-        self.multichoice_box = ctk.CTkOptionMenu(master=self.recBaruFrame, width=210,
-                                                 values=self.multichoice,
-                                                 variable=self.selected_option)
-        self.multichoice_box.place(x=20, y=90)
-        
+        self.queperbox_entry = ctk.CTkEntry(self.recBaruFrame, height=32, width=210, 
+                                     text_color='white', bg_color='transparent', placeholder_text="Empty = 10", 
+                                     font=('Fresca', 16))
+        self.queperbox_entry.place(x=20, y=90)
+
         self.show_answer_var = ctk.BooleanVar()
         self.show_answer_checkbox = ctk.CTkCheckBox(self.recBaruFrame, text='Show Answer', 
                                                     border_width=2, variable=self.show_answer_var)
-        self.show_answer_checkbox.place(x=20, y=140)
+        self.show_answer_checkbox.place(x=20, y=130)
+
+        self.camera_label = ctk.CTkLabel(self.recBaruFrame, text="Camera : ", font=('Fresca', 16))
+        self.camera_label.place(x=20, y=170)
+
+        self.options = {
+            0: "Default webcam",
+            1: "External source"
+        }
+
+        self.caption = self.options[0]
+        self.defaultCam = ctk.StringVar(value=self.caption)
+
+        self.camera_box = ctk.CTkOptionMenu(master=self.recBaruFrame,
+                                    width=150,
+                                    values=list(self.options.values()),
+                                    variable=self.defaultCam)
+        self.camera_box.place(x=80, y=170)
 
         # Midle section
 
@@ -151,45 +164,14 @@ class PageRecord(ctk.CTk):
                                       font=('Fresca', 17))
         self.help4_lbl.place(x=20, y=145)
 
-        # Bottom section
-
-        self.bottomframe = ctk.CTkFrame(self.master, width=800, height= 52)
-        self.bottomframe.place(x=20, y=340)
-
-        self.camera_label = ctk.CTkLabel(self.bottomframe, text="Camera : ", font=('Fresca', 16))
-        self.camera_label.place(x=20, y=10)
-
-        self.options = {
-            0: "Default webcam",
-            1: "External source"
-        }
-
-        self.caption = self.options[0]
-        self.defaultCam = ctk.StringVar(value=self.caption)
-
-        self.camera_box = ctk.CTkOptionMenu(master=self.bottomframe,
-                                    width=150,
-                                    values=list(self.options.values()),
-                                    variable=self.defaultCam)
-        self.camera_box.place(x=80, y=10)
-
-        self.queperbox_lbl = ctk.CTkLabel(self.bottomframe, text="Many rows in one table : ", 
-                                           font=('Fresca', 16))
-        self.queperbox_lbl.place(x=270, y=10)
-
-        self.queperbox_entry = ctk.CTkEntry(self.bottomframe, height=32, width=100, 
-                                     text_color='white', bg_color='transparent', placeholder_text="Empty = 10", 
-                                     font=('Fresca', 16))
-        self.queperbox_entry.place(x=430, y=10)
-
         # Button
 
         self.backBtn = ctk.CTkButton(self.master, text="Back", height=35, command=self.onclosing)
-        self.backBtn.place(x=20, y=405)
+        self.backBtn.place(x=20, y=335)
 
         self.startScan = ctk.CTkButton(self.master, text="Start Scanning", height=35,
                                        command=self.start_scanning_btn)
-        self.startScan.place(x=640, y=405)
+        self.startScan.place(x=640, y=335)
 
         self.protocol("WM_DELETE_WINDOW", self.onclosing)
 
@@ -214,11 +196,10 @@ class PageRecord(ctk.CTk):
         
         # ambil data subject
         self.subject_1 = self.subject_box.get()
-        self.behaviour = self.multichoice_box.get()
         self.cam_no = self.ambilCam()
         self.show_answer = self.show_answer_checkbox.get()
         self.queperbox = int(self.queperbox_entry.get()) if self.queperbox_entry.get() != "" else 10
-        # print(self.subject_1, self.behaviour, self.cam_no, self.queperbox, self.show_answer)
+        # print(self.subject_1, self.cam_no, self.queperbox, self.show_answer)
 
         # ambil data save result
         self.autosave = 1 if self.saveresult_val.get() == 1 else 0
@@ -231,7 +212,7 @@ class PageRecord(ctk.CTk):
     
     def start_scanning_btn(self):
         self.get_all_value()
-        adv_scan = asm.AdvanceScanModule(self.subject_1, self.behaviour, self.cam_no, self.queperbox)
+        adv_scan = asm.AdvanceScanModule(self.subject_1, self.cam_no, self.queperbox)
         adv_scan.autosave = self.autosave
         adv_scan.use_sid = self.use_sid
         adv_scan.order_sid = self.order_sid
