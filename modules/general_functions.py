@@ -13,6 +13,7 @@ class Functions:
         db_subb = dbh.DB_Subject()
         sub_data = db_subb.getDataFromSubName(sub_name)
         self.jawaban = sub_data[4]
+        self.question = sub_data[2]
 
         if self.jawaban:
             # Menguraikan string menjadi list yang valid

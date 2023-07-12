@@ -1,4 +1,5 @@
 import cv2
+import time
 import numpy as np
 from tkinter import *
 from tkinter import messagebox
@@ -193,15 +194,22 @@ class ScanModule:
         for sublist in data:
             sublist_str = ", ".join(str(item) for item in sublist)
             result.append(sublist_str)
-
+        
         final_string = ", ".join(result)
+        jawaban_list = final_string.split(', ')
+
+        for i, _ in enumerate(jawaban_list):
+            if i >= self.question:
+                jawaban_list[i] = "0"
+
+        final_string = ", ".join(jawaban_list)
+        print("final : ", final_string)
 
         return final_string
 
     
     def check_answer(self, boxes):
         jawabanPixelVal = self.get_student_answer(boxes)
-        print("Jawaban : ",jawabanPixelVal)
 
         jawabanIndex = []
         for x in range(0, self.queperbox):
@@ -227,6 +235,32 @@ class ScanModule:
             return
         else:
             messagebox.showwarning("Invalid", "Double check before submit")
+    
+    
+    def show_answers(self, img, myIndex, grading, ans, questions, choices, ansid):
+        secW = int(img.shape[1]/choices)
+        secH = int(img.shape[0]/questions)
+
+        for x in range(0, questions):
+            myAns = myIndex[x]
+            cX = (myAns * secW) + secW // 2
+            cY = (x * secH) + secH // 2
+            if grading[x] == 1:
+                myColor = (0, 255, 0)
+                cv2.rectangle(img, (myAns*secW, x*secH), ((myAns*secW) +
+                            secW, (x*secH)+secH), myColor, cv2.FILLED)
+                cv2.circle(img, (cX, cY), 35, myColor, cv2.FILLED)
+            else:
+                myColor = (0, 0, 255)
+                cv2.rectangle(img, (myAns * secW, x * secH), ((myAns *
+                            secW) + secW, (x * secH) + secH), myColor, cv2.FILLED)
+                cv2.circle(img, (cX, cY), 35, myColor, cv2.FILLED)
+
+                # Menampilkan jawaban benar dengan lingkaran
+                myColor = (0, 255, 0)
+                correctAns = ans[ansid][x]
+                cv2.circle(img, ((correctAns * secW)+secW//2, (x * secH) + secH // 2),
+                        20, myColor, cv2.FILLED)
 
 
     def start_scanning(self):
@@ -260,18 +294,13 @@ class ScanModule:
                 boxes = self.splitBoxes(imgTresh)
                 self.ansid = i
 
-                cv2.imshow(f"Box {i+1}", imgTresh)
-
-                # for i, box in enumerate(boxes):
-                #     cv2.imshow(f"Box {i+1}", boxes[i])
-
                 kunci_jawaban = self.check_answer(boxes)
                 kuncijawaban.append(kunci_jawaban)
+
+            time.sleep(2)
                 
             cv2.imshow("OMRay | Scanning", imgCopy)
-            print(kuncijawaban)
             kunci_jawaban = self.array_to_string(kuncijawaban)
-            print("jawaban string : ", kunci_jawaban)
 
             # Menghentikan program jika tombol 'q' ditekan
             key = cv2.waitKey(10)

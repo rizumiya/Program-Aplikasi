@@ -31,6 +31,7 @@ class ScanModule:
         self.ans = jawaban
         self.box_pilgan = self.question // self.queperbox + (self.question % self.queperbox > 0)
         self.classroom = None
+        print(self.ans)
 
         self.webcam_on = True
         self.imgPath = "p.jpg"
@@ -187,22 +188,25 @@ class ScanModule:
             myAns = myIndex[x]
             cX = (myAns * secW) + secW // 2
             cY = (x * secH) + secH // 2
-            if grading[x] == 1:
-                myColor = (0, 255, 0)
-                cv2.rectangle(img, (myAns*secW, x*secH), ((myAns*secW) +
-                            secW, (x*secH)+secH), myColor, cv2.FILLED)
-                cv2.circle(img, (cX, cY), 35, myColor, cv2.FILLED)
-            else:
-                myColor = (0, 0, 255)
-                cv2.rectangle(img, (myAns * secW, x * secH), ((myAns *
-                            secW) + secW, (x * secH) + secH), myColor, cv2.FILLED)
-                cv2.circle(img, (cX, cY), 35, myColor, cv2.FILLED)
+            try:
+                if grading[x] == 1:
+                    myColor = (0, 255, 0)
+                    cv2.rectangle(img, (myAns*secW, x*secH), ((myAns*secW) +
+                                secW, (x*secH)+secH), myColor, cv2.FILLED)
+                    cv2.circle(img, (cX, cY), 35, myColor, cv2.FILLED)
+                else:
+                    myColor = (0, 0, 255)
+                    cv2.rectangle(img, (myAns * secW, x * secH), ((myAns *
+                                secW) + secW, (x * secH) + secH), myColor, cv2.FILLED)
+                    cv2.circle(img, (cX, cY), 35, myColor, cv2.FILLED)
 
-                # Menampilkan jawaban benar dengan lingkaran
-                myColor = (0, 255, 0)
-                correctAns = ans[ansid][x]
-                cv2.circle(img, ((correctAns * secW)+secW//2, (x * secH) + secH // 2),
-                        20, myColor, cv2.FILLED)
+                    # Menampilkan jawaban benar dengan lingkaran
+                    myColor = (0, 255, 0)
+                    correctAns = ans[ansid][x]
+                    cv2.circle(img, ((correctAns * secW)+secW//2, (x * secH) + secH // 2),
+                            20, myColor, cv2.FILLED)
+            except:
+                pass
 
 
     def get_student_answer(self, boxes):
@@ -229,7 +233,6 @@ class ScanModule:
     
     def check_answer(self, boxes):
         jawabanPixelVal = self.get_student_answer(boxes)
-        print("Jawaban : ",jawabanPixelVal)
 
         self.jawabanIndex = []
         for x in range(0, self.queperbox):
@@ -241,13 +244,16 @@ class ScanModule:
         penilaian = []
         salah = []
         for x in range(0, self.queperbox):
-            if self.ans[self.ansid][x] == 0:
-                self.jawabanIndex[x] = 0
-            if self.ans[self.ansid][x] != 0 and self.ans[self.ansid][x] == self.jawabanIndex[x]:
-                penilaian.append(1)
-            else:
-                penilaian.append(0)
-                salah.append(x + 1)
+            try:
+                if self.ans[self.ansid][x] == 0:
+                    self.jawabanIndex[x] = 0
+                if self.ans[self.ansid][x] != 0 and self.ans[self.ansid][x] == self.jawabanIndex[x]:
+                    penilaian.append(1)
+                else:
+                    penilaian.append(0)
+                    salah.append(x + 1)
+            except:
+                pass
 
         jawab_benar = sum(penilaian)  # 1 nilai
 
