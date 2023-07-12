@@ -203,7 +203,6 @@ class ScanModule:
                 jawaban_list[i] = "0"
 
         final_string = ", ".join(jawaban_list)
-        print("final : ", final_string)
 
         return final_string
 
@@ -296,8 +295,6 @@ class ScanModule:
 
                 kunci_jawaban = self.check_answer(boxes)
                 kuncijawaban.append(kunci_jawaban)
-
-            time.sleep(2)
                 
             cv2.imshow("OMRay | Scanning", imgCopy)
             kunci_jawaban = self.array_to_string(kuncijawaban)
