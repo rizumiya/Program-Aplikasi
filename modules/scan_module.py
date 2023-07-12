@@ -229,6 +229,7 @@ class ScanModule:
     
     def check_answer(self, boxes):
         jawabanPixelVal = self.get_student_answer(boxes)
+        print("Jawaban : ",jawabanPixelVal)
 
         self.jawabanIndex = []
         for x in range(0, self.queperbox):
@@ -299,7 +300,7 @@ class ScanModule:
                 self.ansid = i
 
                 # for i, box in enumerate(boxes):
-                #     cv2.imshow(f"Box {i+1}", box)
+                #     cv2.imshow(f"Box {i+1}", boxes[i])
 
                 jawaban_benar, penilaian = self.check_answer(boxes)
                 

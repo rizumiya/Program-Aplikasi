@@ -3,7 +3,7 @@ import customtkinter as ctk
 from tkinter import *
 from typing import List
 
-from modules import db_helper as dbh, general_functions as func
+from modules import db_helper as dbh, general_functions as func, scan_answer_key as scans
 import config as cfg
 
 
@@ -22,6 +22,7 @@ class PageSubject(ctk.CTk):
         self.bykPilgan: int = 0
         self.subjectName = []
         self.toplevel_window = None
+        self.second_toplevel_window = None
 
         # Header
 
@@ -63,9 +64,13 @@ class PageSubject(ctk.CTk):
                                          bg_color='transparent', font=('Fresca', 16))
         self.banyakPilgan.place(x=20, y=120)
         
-        self.confirmNew = ctk.CTkButton(self.subBaruFrame, text="Create Subject", 
-                                        height=35, command=self.show_checkbox_window)
-        self.confirmNew.place(relx=0.5, y=185, anchor=CENTER)
+        self.confirmNew = ctk.CTkButton(self.subBaruFrame, text="Manual Mode", 
+                                        height=35, width=100, command=self.show_checkbox_window)
+        self.confirmNew.place(x=20, y=170)
+
+        self.confirmNew = ctk.CTkButton(self.subBaruFrame, text="Scan Mode", 
+                                        height=35, width=100, command=self.scan_answer_btn)
+        self.confirmNew.place(x=130, y=170)
 
         # Bagian edit subject
 
@@ -164,30 +169,49 @@ class PageSubject(ctk.CTk):
         self.namaSubject.delete(0, 'end')
         self.banyakPilgan.delete(0, 'end')
         self.namaSubject.focus()
-    
-    def show_checkbox_window(self):
+
+    def check_values(self):
         if not self.banyakSoal.get().isdigit():
             messagebox.showerror("Error", "Input must be a number")
-            return
+            return False
+        elif self.banyakSoal.get() == 0:
+            messagebox.showerror("Error", "Number of questions not set")
+            return False
         else:
             db_sub = dbh.DB_Subject()
             if db_sub.checkSubjectExists(self.id_login, self.namaSubject.get()):
                 messagebox.showwarning("Duplicate", "Subject already existed")
+                return False
             else:
-                self.bykPilgan = int(self.banyakPilgan.get())
-                self.bykSoal = int(self.banyakSoal.get())
-                self.namaSub = self.namaSubject.get()
-                self.open_toplevel()
-                self.cleanEntry()
+                return True
+            
+    def scan_answer_btn(self):
+        if self.check_values():
+            self.bykPilgan = int(self.banyakPilgan.get())
+            self.bykSoal = int(self.banyakSoal.get())
+            self.namaSub = self.namaSubject.get()
+            self.open_second_toplevel()
+            self.cleanEntry()
+
+    def show_checkbox_window(self):
+        if self.check_values():
+            self.bykPilgan = int(self.banyakPilgan.get())
+            self.bykSoal = int(self.banyakSoal.get())
+            self.namaSub = self.namaSubject.get()
+            self.open_toplevel()
+            self.cleanEntry()
     
     def open_toplevel(self):
-        if self.bykSoal == 0:
-            messagebox.showerror("Error", "Number of questions not set")
-            return
-        elif self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
             self.toplevel_window = CheckBoxWindow(self.id_login, self.bykPilgan, self.bykSoal, self.namaSub)
         else:
             self.toplevel_window.focus()
+
+    def open_toplevel(self):
+        if self.second_toplevel_window is None or not self.second_toplevel_window.winfo_exists():
+            self.second_toplevel_window = scans.ScanWindow(self.id_login, self.bykPilgan, self.bykSoal, self.namaSub)
+        else:
+            self.second_toplevel_window.focus()
 
     def onclosing(self):
         # Mengembalikan ke pengecekan awal
@@ -235,6 +259,8 @@ class CheckBoxWindow(ctk.CTkToplevel):
 
         self.checkbox_submit_button = ctk.CTkButton(self, text="Submit", height=35, command=self.save_checkbox_values)
         self.checkbox_submit_button.place(relx=0.5, y=200, anchor=CENTER)
+
+        self.after(200, self.lift)
 
     # Function
 
