@@ -207,7 +207,7 @@ class PageSubject(ctk.CTk):
         else:
             self.toplevel_window.focus()
 
-    def open_toplevel(self):
+    def open_second_toplevel(self):
         if self.second_toplevel_window is None or not self.second_toplevel_window.winfo_exists():
             self.second_toplevel_window = scans.ScanWindow(self.id_login, self.bykPilgan, self.bykSoal, self.namaSub)
         else:

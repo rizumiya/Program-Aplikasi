@@ -314,7 +314,7 @@ class ScanWindow(ctk.CTkToplevel):
         self.queperbox_entry.place(relx=0.5, y=140, anchor=CENTER)
 
         self.confirmNew = ctk.CTkButton(self, text="Start", 
-                                        height=35, width=100)
+                                        height=35, width=100, command=self.start_scanning_answer)
         self.confirmNew.place(relx=0.5, y=220, anchor=CENTER)
 
         self.after(200, self.lift)
@@ -332,9 +332,3 @@ class ScanWindow(ctk.CTkToplevel):
         scan = ScanModule(self.idLogin, self.nameSub, self.queperbox, self.question, self.choice)
         scan.start_scanning()
         self.destroy()
-
-
-app = ScanWindow(1, 1, 1, 1)
-app.mainloop()
-
-
