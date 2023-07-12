@@ -31,7 +31,6 @@ class ScanModule:
         self.ans = jawaban
         self.box_pilgan = self.question // self.queperbox + (self.question % self.queperbox > 0)
         self.classroom = None
-        print(self.ans)
 
         self.webcam_on = True
         self.imgPath = "p.jpg"

@@ -236,30 +236,16 @@ class ScanModule:
             messagebox.showwarning("Invalid", "Double check before submit")
     
     
-    def show_answers(self, img, myIndex, grading, ans, questions, choices, ansid):
+    def show_answers(self, img, ans, questions, choices, ansid):
         secW = int(img.shape[1]/choices)
         secH = int(img.shape[0]/questions)
 
         for x in range(0, questions):
-            myAns = myIndex[x]
-            cX = (myAns * secW) + secW // 2
-            cY = (x * secH) + secH // 2
-            if grading[x] == 1:
-                myColor = (0, 255, 0)
-                cv2.rectangle(img, (myAns*secW, x*secH), ((myAns*secW) +
-                            secW, (x*secH)+secH), myColor, cv2.FILLED)
-                cv2.circle(img, (cX, cY), 35, myColor, cv2.FILLED)
-            else:
-                myColor = (0, 0, 255)
-                cv2.rectangle(img, (myAns * secW, x * secH), ((myAns *
-                            secW) + secW, (x * secH) + secH), myColor, cv2.FILLED)
-                cv2.circle(img, (cX, cY), 35, myColor, cv2.FILLED)
-
-                # Menampilkan jawaban benar dengan lingkaran
-                myColor = (0, 255, 0)
-                correctAns = ans[ansid][x]
-                cv2.circle(img, ((correctAns * secW)+secW//2, (x * secH) + secH // 2),
-                        20, myColor, cv2.FILLED)
+            # Menampilkan jawaban benar dengan lingkaran
+            myColor = (0, 255, 0)
+            correctAns = ans[ansid][x]
+            cv2.circle(img, ((correctAns * secW)+secW//2, (x * secH) + secH // 2),
+                    20, myColor, cv2.FILLED)
 
 
     def start_scanning(self):
@@ -281,7 +267,7 @@ class ScanModule:
                 # Ambil titik sudut
                 x, y, w, h = cv2.boundingRect(boxpilgan)
 
-                cv2.drawContours(imgCopy, [boxpilgan], -1, (0, 255, 0), 2)
+                cv2.drawContours(self.imgFinal, [boxpilgan], -1, (0, 255, 0), 2)
 
                 warped = self.warp_prespective(frame, boxpilgan.reshape(4, 2))
 
@@ -295,8 +281,19 @@ class ScanModule:
 
                 kunci_jawaban = self.check_answer(boxes)
                 kuncijawaban.append(kunci_jawaban)
+
+                imgWarpMentah = np.zeros_like(warped)
+
+                self.show_answers(imgWarpMentah, kuncijawaban, self.queperbox, self.choice, self.ansid)
                 
-            cv2.imshow("OMRay | Scanning", imgCopy)
+                invMatrix = cv2.getPerspectiveTransform(self.ttk2, self.ttk1)
+                imgInWarp = cv2.warpPerspective(imgWarpMentah, invMatrix,
+                                                (self.widthImg, self.heightImg))
+            
+                self.imgFinal = cv2.addWeighted(self.imgFinal, 1, imgInWarp, 1, 0)
+
+                
+            cv2.imshow("OMRay | Scanning", self.imgFinal)
             kunci_jawaban = self.array_to_string(kuncijawaban)
 
             # Menghentikan program jika tombol 'q' ditekan
