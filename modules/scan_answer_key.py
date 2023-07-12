@@ -218,7 +218,7 @@ class ScanModule:
             self.idLogin, 
             self.name_sub, 
             self.question,
-            self.choice + 1, 
+            self.choice, 
             answer
         )
 
@@ -259,6 +259,8 @@ class ScanModule:
                 # Bagi tiap kotak menjadi perkotak
                 boxes = self.splitBoxes(imgTresh)
                 self.ansid = i
+
+                cv2.imshow(f"Box {i+1}", imgTresh)
 
                 # for i, box in enumerate(boxes):
                 #     cv2.imshow(f"Box {i+1}", boxes[i])
@@ -329,6 +331,6 @@ class ScanWindow(ctk.CTkToplevel):
 
     def start_scanning_answer(self):
         self.get_queperbox()
-        scan = ScanModule(self.idLogin, self.nameSub, self.queperbox, self.question, self.choice)
+        scan = ScanModule(self.idLogin, self.nameSub, int(self.queperbox), self.question, int(self.choice + 1))
         scan.start_scanning()
         self.destroy()
