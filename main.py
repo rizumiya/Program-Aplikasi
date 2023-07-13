@@ -164,22 +164,25 @@ class MainMenu(ctk.CTk):
         return self.tree
 
     def update_treeview(self):
-        self.workbook = xl.load_workbook(self.xlPath)
-        
-        self.workbook._active_sheet_index = 0
-        self.sheet = self.workbook.active
-        self.list_data = list(self.sheet.values)
-        self.cols = self.list_data[0]
-        self.tree.delete(*self.tree.get_children())
-        self.tree.config(columns=self.cols)
+        try:
+            self.workbook = xl.load_workbook(self.xlPath)
+            
+            self.workbook._active_sheet_index = 0
+            self.sheet = self.workbook.active
+            self.list_data = list(self.sheet.values)
+            self.cols = self.list_data[0]
+            self.tree.delete(*self.tree.get_children())
+            self.tree.config(columns=self.cols)
 
-        for col_name in self.cols:
-            self.tree.heading(col_name, text=col_name)
-            self.tree.column(col_name, width=font.Font().measure(col_name))
+            for col_name in self.cols:
+                self.tree.heading(col_name, text=col_name)
+                self.tree.column(col_name, width=font.Font().measure(col_name))
 
-        for value_data in self.list_data[1:]:
-            self.tree.insert("", 'end', values=value_data)
-        self.after(100, self.update_treeview)
+            for value_data in self.list_data[1:]:
+                self.tree.insert("", 'end', values=value_data)
+            self.after(100, self.update_treeview)
+        except Exception as e:
+            print(e)
 
     def scan_btn(self):
         try:

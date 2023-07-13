@@ -3,6 +3,8 @@ import customtkinter as ctk
 import openpyxl as xl
 from tkinter import messagebox, font, ttk
 
+import config as cfg
+
 
 class PageSeeRecord(ctk.CTkToplevel):
     def __init__(self, parent):
@@ -45,6 +47,11 @@ class PageSeeRecord(ctk.CTkToplevel):
         self.search_btn = ctk.CTkButton(self, text="Search", command=self.search_records)
         self.search_btn.place(x=410, y=100)
 
+        # Tombol hapus history
+        self.reset_btn = ctk.CTkButton(self, text="Clear History", width=100, fg_color="#a13535", 
+                                           hover_color="#a61717", command=self.clear_history)
+        self.reset_btn.place(x=690, y=100)
+
         # Tombol Reset
         self.reset_btn = ctk.CTkButton(self, text="\u27F2", width=80, command=self.reset_filter)
         self.reset_btn.place(x=800, y=100)
@@ -65,6 +72,13 @@ class PageSeeRecord(ctk.CTkToplevel):
 
     def on_closing(self):
         self.destroy()
+
+    def clear_history(self):
+        if messagebox.askokcancel("Clear History", "This action will clear your scanning history, continue?"): 
+            os.remove(self.xlPath)
+            pyxl = cfg.PY_XL(self.xlPath)
+            pyxl.create_excel_file()
+            self.on_closing()
 
     def search_records(self):
         classroom = self.classroom_entry.get()
@@ -125,31 +139,34 @@ class PageSeeRecord(ctk.CTkToplevel):
             self.tree.insert("", 'end', values=value_data)
 
     def update_treeview(self):
-        if self.search_filter_applied:
-            # Gunakan data yang telah difilter saat pencarian
-            self.tree.delete(*self.tree.get_children())
-            self.tree.config(columns=self.cols)
+        try:
+            if self.search_filter_applied:
+                # Gunakan data yang telah difilter saat pencarian
+                self.tree.delete(*self.tree.get_children())
+                self.tree.config(columns=self.cols)
 
-            for col_name in self.cols:
-                self.tree.heading(col_name, text=col_name)
-                self.tree.column(col_name, width=font.Font().measure(col_name))
+                for col_name in self.cols:
+                    self.tree.heading(col_name, text=col_name)
+                    self.tree.column(col_name, width=font.Font().measure(col_name))
 
-            for value_data in self.filtered_data:
-                self.tree.insert("", 'end', values=value_data)
-        else:
+                for value_data in self.filtered_data:
+                    self.tree.insert("", 'end', values=value_data)
+            else:
             # Gunakan semua data
-            self.workbook = xl.load_workbook(self.xlPath)
-            self.sheet = self.workbook[self.sheet_name]
-            self.list_data = list(self.sheet.values)
-            self.cols = self.list_data[0]
-            self.tree.delete(*self.tree.get_children())
-            self.tree.config(columns=self.cols)
+                self.workbook = xl.load_workbook(self.xlPath)
+                self.sheet = self.workbook[self.sheet_name]
+                self.list_data = list(self.sheet.values)
+                self.cols = self.list_data[0]
+                self.tree.delete(*self.tree.get_children())
+                self.tree.config(columns=self.cols)
 
-            for col_name in self.cols:
-                self.tree.heading(col_name, text=col_name)
-                self.tree.column(col_name, width=font.Font().measure(col_name))
+                for col_name in self.cols:
+                    self.tree.heading(col_name, text=col_name)
+                    self.tree.column(col_name, width=font.Font().measure(col_name))
 
-            for value_data in self.list_data[1:]:
-                self.tree.insert("", 'end', values=value_data)
+                for value_data in self.list_data[1:]:
+                    self.tree.insert("", 'end', values=value_data)
 
-        self.after(100, self.update_treeview)
+            self.after(100, self.update_treeview)
+        except Exception as e:
+            print(e)
