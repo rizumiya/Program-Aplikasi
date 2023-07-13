@@ -304,9 +304,6 @@ class ScanModule:
                 boxes = self.splitBoxes(imgTresh)
                 self.ansid = i
 
-                # for i, box in enumerate(boxes):
-                #     cv2.imshow(f"Box {i+1}", boxes[i])
-
                 jawaban_benar, penilaian = self.check_answer(boxes)
                 
                 jwb_benar += jawaban_benar
@@ -329,6 +326,12 @@ class ScanModule:
 
             cv2.putText(self.imgFinal, str(int(total_score)), (20, 80),
                         cv2.FONT_HERSHEY_SIMPLEX, 3, (0, 255, 0), 3)
+            
+            cv2.putText(self.imgFinal, "Press [q] to quit", (20, 750),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
+            
+            cv2.putText(self.imgFinal, "Press [r] to rotate", (20, 780),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
             
             cv2.imshow("OMRay | Scanning", self.imgFinal)
 

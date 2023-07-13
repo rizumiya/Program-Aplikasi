@@ -8,12 +8,12 @@ import customtkinter as ctk
 from . import db_helper as dbh 
 
 class ScanModule:
-    def __init__(self, idLogin, subname, queperbox, question, choice):
+    def __init__(self, idLogin, subname, queperbox, question, choice, camera):
 
         # Mengisi variable utama
         self.idLogin = idLogin
         self.name_sub = subname
-        self.camera_number = 1
+        self.camera_number = camera
         self.webcam_on = True
         self.queperbox = queperbox # numbers per box
 
@@ -98,8 +98,12 @@ class ScanModule:
 
     def check_exam_paper(self, valid_contours):
         if len(valid_contours) == 0:
+            self.nopaper = True
             cv2.putText(self.imgFinal, "No Exam Paper Detected!", (85, 400),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 225), 3)
+        else:
+            self.nopaper = False
+
 
 
     def kotak_contour(self, dilated_edges):
@@ -292,7 +296,16 @@ class ScanModule:
             
                 self.imgFinal = cv2.addWeighted(self.imgFinal, 1, imgInWarp, 1, 0)
 
-                
+            
+            cv2.putText(self.imgFinal, "Press [q] to quit", (20, 720),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
+            
+            cv2.putText(self.imgFinal, "Press [r] to rotate", (20, 750),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
+            
+            cv2.putText(self.imgFinal, "Press [enter] to confirm", (20, 780),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 0, 0), 2)
+            
             cv2.imshow("OMRay | Scanning", self.imgFinal)
             kunci_jawaban = self.array_to_string(kuncijawaban)
 
@@ -303,8 +316,9 @@ class ScanModule:
             elif key == ord('r'):
                 self.is_pressed = True
             elif key == 13:
-                self.save_to_database(kunci_jawaban)
-                break
+                if not self.nopaper:
+                    self.save_to_database(kunci_jawaban)
+                    break
 
         self.cap.release()
         cv2.destroyAllWindows()
@@ -314,7 +328,7 @@ class ScanWindow(ctk.CTkToplevel):
     def __init__(self, idLogin, bykPilgan, bykSoal, namaSub):
         super().__init__()
         self.title("OMRay | Subject")
-        self.geometry('400x280+1200+90')
+        self.geometry('360x200+1200+90')
         self.resizable(False, False)
         self.iconbitmap('assets/images/OMRay.ico')
 
@@ -329,31 +343,61 @@ class ScanWindow(ctk.CTkToplevel):
                                     font=('Fugaz One', 36, 'bold'))
         self.heading.place(x=20, y=10)
 
+        # Widget
+
+        self.camera_label = ctk.CTkLabel(self, text="Camera : ", 
+                                         font=('Fresca', 16))
+        self.camera_label.place(x=20, y=70)
+
+        self.options = {
+            0: "Default webcam",
+            1: "External source"
+        }
+
+        self.caption = self.options[0]
+        self.defaultCam = ctk.StringVar(value=self.caption)
+
+        self.camera_box = ctk.CTkOptionMenu(master=self,
+                                    width=140,
+                                    values=list(self.options.values()),
+                                    variable=self.defaultCam)
+        self.camera_box.place(x=20, y=105)
+
         self.queperboxlbl = ctk.CTkLabel(self, text="Many rows in one table : ", 
                                         font=('Fresca', 16))
-        self.queperboxlbl.place(relx=0.5, y=100, anchor=CENTER)
+        self.queperboxlbl.place(x=180, y=70)
 
         self.queperbox_entry = ctk.CTkEntry(self, height=32, width=100, 
                                     text_color='white', 
                                     bg_color='transparent', font=('Fresca', 16))
-        self.queperbox_entry.place(relx=0.5, y=140, anchor=CENTER)
+        self.queperbox_entry.place(x=180, y=100)
 
         self.confirmNew = ctk.CTkButton(self, text="Start", 
                                         height=35, width=100, command=self.start_scanning_answer)
-        self.confirmNew.place(relx=0.5, y=220, anchor=CENTER)
+        self.confirmNew.place(relx=0.5, y=170, anchor=CENTER)
 
         self.after(200, self.lift)
     
+    
+    def ambilCam(self):
+        if self.camera_box.get() == "Default webcam":
+            return 0
+        else : 
+            return 1
 
     def get_queperbox(self):
         if not self.queperbox_entry.get().isdigit():
             messagebox.showerror("Error", "Input must be a number")
-            return
+            return False
         else:
             self.queperbox = self.queperbox_entry.get()
+            return True
 
     def start_scanning_answer(self):
-        self.get_queperbox()
-        scan = ScanModule(self.idLogin, self.nameSub, int(self.queperbox), self.question, int(self.choice + 1))
-        scan.start_scanning()
-        self.destroy()
+        checkqueperbox = self.get_queperbox()
+        if checkqueperbox:
+            scan = ScanModule(self.idLogin, self.nameSub, int(self.queperbox), self.question, int(self.choice + 1), self.ambilCam())
+            scan.start_scanning()
+            self.destroy()
+        else:
+            return

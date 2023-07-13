@@ -1,6 +1,7 @@
 import cv2
 import numpy as np
 import openpyxl
+from tkinter import messagebox
 from datetime import datetime
 
 from . import general_functions as func
@@ -242,14 +243,20 @@ class AdvanceScanModule:
         penilaian = []
         salah = []
         for x in range(0, self.queperbox):
-            if self.ans[self.ansid][x] == 0:
-                self.jawabanIndex[x] = 0
-            if self.ans[self.ansid][x] != 0 and self.ans[self.ansid][x] == self.jawabanIndex[x]:
-                penilaian.append(1)
-            else:
-                i = self.ansid * 10
-                penilaian.append(0)
-                salah.append(x + 1 + i)
+            try:
+                if self.ans[self.ansid][x] == 0:
+                    self.jawabanIndex[x] = 0
+                if self.ans[self.ansid][x] != 0 and self.ans[self.ansid][x] == self.jawabanIndex[x]:
+                    penilaian.append(1)
+                else:
+                    i = self.ansid * 10
+                    penilaian.append(0)
+                    salah.append(x + 1 + i)
+            except:
+                messagebox.showerror("Error", "Please check how many rows in the table")
+                self.cap.release()
+                cv2.destroyAllWindows()
+                break
 
         jawab_benar = sum(penilaian)  # 1 nilai
 
